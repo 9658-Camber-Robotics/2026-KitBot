@@ -43,9 +43,7 @@ public class IntakeRollerSubsystem extends SubsystemBase {
     }
 
     public Command setIntakeRoller(double speed) {
-        return runOnce(() -> {
-            intake.set(speed);
-        });
+        return run(() -> intake.set(speed));
     }
 
     public Command out(double speed) {
