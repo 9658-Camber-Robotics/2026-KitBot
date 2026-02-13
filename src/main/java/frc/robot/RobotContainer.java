@@ -5,7 +5,7 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.subsystems.DiffDriveSubsystem;
+import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.IntakeRollerSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
@@ -25,7 +25,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final DiffDriveSubsystem m_diffDriveSubsystem = new DiffDriveSubsystem();
+  private final SwerveSubsystem m_diffDriveSubsystem = new SwerveSubsystem();
   private final IntakeRollerSubsystem m_intakeSubsystem = new IntakeRollerSubsystem();
   private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem();
 
