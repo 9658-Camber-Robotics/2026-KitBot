@@ -40,12 +40,12 @@ public final class Constants {
         public static final Distance DrumRadius = Meters.of((16 * Units.inchesToMeters(0.25)) / (2 * Math.PI));
         public static final Mass CarriageMass = Kilograms.of(4.0); // kg
 
-        public static final Distance MinElevatorHeightMeters = 0.0;
-        public static final Distance MaxElevatorHeightMeters = 10.25;
-        
+        public static final Distance MinElevatorHeightMeters = Meters.of(0.0);
+        public static final Distance MaxElevatorHeightMeters = Meters.of(10.25);
 
-        public static final AngularVelocity MaxVelocity = 3.5;
-        public static final AngularAcceleration MaxAcceleration = 2.5;
+
+        public static final AngularVelocity MaxVelocity = RadiansPerSecond.of(3.5);
+        public static final AngularAcceleration MaxAcceleration = RadiansPerSecondPerSecond.of(2.5);
 
         public static Distance StartingHeight;
     }
