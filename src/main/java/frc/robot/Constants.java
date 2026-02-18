@@ -4,9 +4,10 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.*;
+import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
+import yams.gearing.Sprocket;
 
 import static edu.wpi.first.units.Units.*;
 
@@ -24,30 +25,33 @@ public final class Constants {
         public static final int kDriverControllerPort = 0;
     }
 
-    public static class ElevatorConstants {
+    public static class ClimbConstants {
 
-        public static final double Kp = 5;
-        public static final double Ki = 0;
-        public static final double Kd = 0;
+        public static final String ArmPositionKey = "ArmPosition";
+        public static final String ArmPKey = "ArmP";
 
-        public static final double kS = 0.0; // volts (V)
-        public static final double kG = 0.762; // volts (V)
-        public static final double kV = 0.762; // volt per velocity (V/(m/s))
-        public static final double kA = 0.0; // volt per acceleration (V/(m/s²))
+        // The P gain for the PID controller that drives this arm.
+        public static final double ClimbKp = 50.0;
+        public static final double ClimbKi = 0.0;
+        public static final double ClimbKd = 0.0;
 
-        public static final Voltage MaxVolts = Volts.of(20);
-        public static final MechanismGearing ElevatorGearBox = new MechanismGearing(25.0);
-        public static final Distance DrumRadius = Meters.of((16 * Units.inchesToMeters(0.25)) / (2 * Math.PI));
-        public static final Mass CarriageMass = Kilograms.of(4.0); // kg
+        // distance per pulse = (angle per revolution) / (pulses per revolution)
+        //  = (2 * PI rads) / (4096 pulses)
+        public static final double ArmEncoderDistPerPulse = 2.0 * Math.PI / 4096;
 
-        public static final Distance MinElevatorHeightMeters = Meters.of(0.0);
-        public static final Distance MaxElevatorHeightMeters = Meters.of(10.25);
+        public static final MechanismGearing ClimbGearBox = new MechanismGearing(GearBox.fromReductionStages(80), Sprocket.fromStages("16:48"));
+        public static final Mass ClimbMass = Pounds.of(8); // Kilograms
+        public static final Distance ClimbLength = Inches.of(30);
+        public static final Angle softMaxAngle = Degrees.of(225);
+        public static final Angle softMinAngle = Degrees.of(-45);
+        public static final Angle hardMaxAngle = Degrees.of(225);
+        public static final Angle hardMinAngle = Degrees.of(-45);
+        public static final Angle startingAngle = Degrees.of(225);
 
-
-        public static final AngularVelocity MaxVelocity = RadiansPerSecond.of(3.5);
-        public static final AngularAcceleration MaxAcceleration = RadiansPerSecondPerSecond.of(2.5);
-
-        public static Distance StartingHeight;
+        //yippee
+        public static final Angle L2Angle = Degrees.of(0); //Rotations.of(-0.74);
+        public static final Angle L3Angle = Degrees.of(15); //Rotations.of(-0.788);
+        public static final Angle intakeAngle = Degrees.of(45); //Rotations.of(-0.69);
     }
 
     public static double maxSpeed;
