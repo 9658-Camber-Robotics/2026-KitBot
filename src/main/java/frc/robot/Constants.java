@@ -49,8 +49,8 @@ public final class Constants {
         public static final Angle startingAngle = Degrees.of(225);
 
         //yippee
-        public static final Angle L2Angle = Degrees.of(0); //Rotations.of(-0.74);
-        public static final Angle L3Angle = Degrees.of(15); //Rotations.of(-0.788);
+        public static final Angle angle1 = Degrees.of(0); //Rotations.of(-0.74);
+        public static final Angle angle2 = Degrees.of(15); //Rotations.of(-0.788);
         public static final Angle intakeAngle = Degrees.of(45); //Rotations.of(-0.69);
     }
 

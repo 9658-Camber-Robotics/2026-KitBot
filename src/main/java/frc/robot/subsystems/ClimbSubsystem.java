@@ -47,7 +47,7 @@ public class ClimbSubsystem extends SubsystemBase {
     // Create our SmartMotorController from our Spark and config with the NEO.
     private SmartMotorController sparkSmartMotorController = new SparkWrapper(spark, DCMotor.getNEO(1), smcConfig);
 
-    private ArmConfig armCfg = new ArmConfig(sparkSmartMotorController)
+    private ArmConfig climbCfg = new ArmConfig(sparkSmartMotorController)
             // Soft limit is applied to the SmartMotorControllers PID
             .withSoftLimits(ClimbConstants.softMinAngle, ClimbConstants.softMaxAngle)
             // Hard limit is applied to the simulation.
@@ -58,31 +58,28 @@ public class ClimbSubsystem extends SubsystemBase {
             .withLength(ClimbConstants.ClimbLength)
             .withMass(ClimbConstants.ClimbMass)
             // Telemetry name and verbosity for the arm.
-            .withTelemetry("Arm", TelemetryVerbosity.HIGH);
+            .withTelemetry("Climb", TelemetryVerbosity.HIGH);
 
     // Arm Mechanism
-    private Arm arm = new Arm(armCfg);
+    private Arm climb = new Arm(climbCfg);
 
-    public Command setAngle(Angle angle) { return arm.setAngle(angle);}
+    public Command setAngle(Angle angle) { return climb.setAngle(angle);}
 
     public Command resetAngle() { return setAngle(ClimbConstants.startingAngle);}
-    public Command armL2() { return setAngle(ClimbConstants.L2Angle).withName("L2");}
-    public Command armL3() { return setAngle(ClimbConstants.L3Angle).withName("L3");}
-    public Command armIntake() { return setAngle(ClimbConstants.intakeAngle).withName("intake");}
 
-    public Command set(double dutycycle) { return arm.set(dutycycle);}
+    public Command set(double dutycycle) { return climb.set(dutycycle);}
 
-    public Command sysId() { return arm.sysId(Volts.of(7), Volts.of(2).per(Second), Seconds.of(4));}
+    public Command sysId() { return climb.sysId(Volts.of(7), Volts.of(2).per(Second), Seconds.of(4));}
 
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
-        arm.updateTelemetry();
+        climb.updateTelemetry();
     }
 
     @Override
     public void simulationPeriodic() {
         // This method will be called once per scheduler run during simulation
-        arm.simIterate();
+        climb.simIterate();
     }
 }
