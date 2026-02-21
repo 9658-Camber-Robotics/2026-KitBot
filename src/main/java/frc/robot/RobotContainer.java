@@ -8,7 +8,6 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -16,12 +15,10 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.*;
 import swervelib.SwerveInputStream;
 
-import static edu.wpi.first.units.Units.*;
-
 public class RobotContainer {
     private final ShooterSubsystem shooter = new ShooterSubsystem();
     private final ClimbSubsystem climb = new ClimbSubsystem();
-    private final HopperSubsystem hopper = new HopperSubsystem();
+    private final KickerSubsystem hopper = new KickerSubsystem();
     private final IntakeRollerSubsystem intake = new IntakeRollerSubsystem();
     private final SwerveSubsystem drivebase = new SwerveSubsystem();
 
@@ -46,6 +43,10 @@ public class RobotContainer {
 
     public RobotContainer() {
         drivebase.setDefaultCommand(driveFieldOrientedAngularVelocity);
+        shooter.setDefaultCommand(shooter.set(0));
+        climb.setDefaultCommand(shooter.set(0));
+        hopper.setDefaultCommand(shooter.set(0));
+        intake.setDefaultCommand(shooter.set(0));
         configureBindings();
     }
 
@@ -60,6 +61,7 @@ public class RobotContainer {
 
         driverController.rightTrigger().whileTrue(shooter.shoot());
 
+        //auto aim
         driverController.leftTrigger().whileTrue(Commands.startRun(() -> {
             driveAngularVelocity.aim(DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue) == DriverStation.Alliance.Blue ? blueHub : redHub);
             driveAngularVelocity.aimWhile(true);
@@ -70,8 +72,6 @@ public class RobotContainer {
         driverController.povUp().whileTrue(drivebase.aimUp(driveAngularVelocity));
         driverController.povLeft().whileTrue(drivebase.aimLeft(driveAngularVelocity));
         driverController.povRight().whileTrue(drivebase.aimRight(driveAngularVelocity));
-
-
     }
 
     public Command getAutonomousCommand() {
