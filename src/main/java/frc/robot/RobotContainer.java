@@ -82,9 +82,9 @@ public class RobotContainer {
         // fire one ball, shooter speed drops to expected point with debounce
         // stops so feeder can stop; reverse accelerate
         // shooter gets up to speed (start accerelator) start feeder, go back to top
+//k
 
-
-        // create debounce stuff
+        // create debounce stuff, initialize digital input stuff
         // DigitalInput input = new Digital Input (0);
         // need a debouncer
         // Debouncer m_debouncer = new Debouncer (0.1, Debouncer.DebounceType.kBoth);
