@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -52,8 +53,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Voltage;
 
-import static edu.wpi.first.units.Units.Meter;
-import static edu.wpi.first.units.Units.Volts;
+import static edu.wpi.first.units.Units.*;
 
 public class SwerveSubsystem extends SubsystemBase {
     /** Creates a new ExampleSubsystem. */
@@ -203,9 +203,6 @@ public class SwerveSubsystem extends SubsystemBase {
         );
     }
 
-
-
-
     /**
      * Drive with {@link SwerveSetpointGenerator} from 254, implemented by PathPlanner.
      *
@@ -240,13 +237,6 @@ public class SwerveSubsystem extends SubsystemBase {
                 });
     }
 
-
-    /**
-     * Drive with 254's Setpoint generator; port written by PathPlanner.
-     *
-     * @param fieldRelativeSpeeds Field-Relative {@link ChassisSpeeds}
-     * @return Command to drive the robot using the setpoint generator.
-     */
     public Command driveWithSetpointGeneratorFieldRelative(Supplier<ChassisSpeeds> fieldRelativeSpeeds)
     {
         try
@@ -262,13 +252,27 @@ public class SwerveSubsystem extends SubsystemBase {
         return Commands.none();
 
     }
+    public Command povAim(Angle rad, SwerveInputStream driveAngularVelocity){
+        return run(()->{
+            var originalSpeed = driveAngularVelocity.get();
+            var omegaRadiansPerSecond = getSwerveDrive().getSwerveController().headingCalculate(getHeading().getRadians(), rad.in(Radians));
+            var speeds = new ChassisSpeeds(originalSpeed.vxMetersPerSecond, originalSpeed.vyMetersPerSecond, omegaRadiansPerSecond);
+            driveFieldOriented(speeds);
+        });
+    }
+    public Command aimDown(SwerveInputStream driveAngularVelocity){
+        return povAim(Radians.of(Math.PI), driveAngularVelocity);
+    }
+    public Command aimRight(SwerveInputStream driveAngularVelocity){
+        return povAim(Radians.of(Math.PI/2), driveAngularVelocity);
+    }
+    public Command aimUp(SwerveInputStream driveAngularVelocity){
+        return povAim(Radians.of(0), driveAngularVelocity);
+    }
+    public Command aimLeft(SwerveInputStream driveAngularVelocity){
+        return povAim(Radians.of(Math.PI/-2), driveAngularVelocity);
+    }
 
-    /**
-     * Gets the current yaw angle of the robot, as reported by the swerve pose estimator in the underlying drivebase.
-     * Note, this is not the raw gyro reading, this may be corrected from calls to resetOdometry().
-     *
-     * @return The yaw angle
-     */
     public Rotation2d getHeading()
     {
         return getPose().getRotation();

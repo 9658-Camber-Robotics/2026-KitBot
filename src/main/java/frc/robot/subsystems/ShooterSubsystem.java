@@ -14,7 +14,9 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 import java.util.function.Supplier;
+
 import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
 import yams.mechanisms.config.FlyWheelConfig;
@@ -26,68 +28,67 @@ import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
 
-public class ShooterSubsystem extends SubsystemBase
-{
-  private final SparkMax                   ShooterMotor    = new SparkMax(10, MotorType.kBrushless);
+public class ShooterSubsystem extends SubsystemBase {
+    private final SparkMax ShooterMotor = new SparkMax(10, MotorType.kBrushless);
 
-  private final SmartMotorControllerConfig motorConfig = new SmartMotorControllerConfig(this)
-      .withClosedLoopController(1, 0, 0, RPM.of(10000), RPM.per(Second).of(60))
-      .withGearing(new MechanismGearing(GearBox.fromReductionStages(3, 4)))
-      .withIdleMode(MotorMode.COAST)
-      .withTelemetry("ShooterMotor", TelemetryVerbosity.HIGH)
-      .withStatorCurrentLimit(Amps.of(40))
-      .withMotorInverted(false)
-      .withClosedLoopRampRate(Seconds.of(0.25))
-      .withOpenLoopRampRate(Seconds.of(0.25))
-      .withFeedforward(new SimpleMotorFeedforward(0, 0, 0))
-      .withControlMode(ControlMode.CLOSED_LOOP);
-  private final SmartMotorController motor         = new SparkWrapper(ShooterMotor, DCMotor.getNEO(1), motorConfig);
-  private final FlyWheelConfig       shooterConfig = new FlyWheelConfig(motor)
-      // Diameter of the flywheel.
-      .withDiameter(Inches.of(4))
-      // Mass of the flywheel.
-      .withMass(Pounds.of(1))
-      .withTelemetry("ShooterMech", TelemetryVerbosity.HIGH);
-  private final FlyWheel             shooter       = new FlyWheel(shooterConfig);
+    private final SmartMotorControllerConfig motorConfig = new SmartMotorControllerConfig(this)
+            .withClosedLoopController(1, 0, 0, RPM.of(10000), RPM.per(Second).of(60))
+            .withGearing(new MechanismGearing(GearBox.fromReductionStages(3, 4)))
+            .withIdleMode(MotorMode.COAST)
+            .withTelemetry("ShooterMotor", TelemetryVerbosity.HIGH)
+            .withStatorCurrentLimit(Amps.of(40))
+            .withMotorInverted(false)
+            .withClosedLoopRampRate(Seconds.of(0.25))
+            .withOpenLoopRampRate(Seconds.of(0.25))
+            .withFeedforward(new SimpleMotorFeedforward(0, 0, 0))
+            .withControlMode(ControlMode.CLOSED_LOOP);
+    private final SmartMotorController motor = new SparkWrapper(ShooterMotor, DCMotor.getNEO(1), motorConfig);
+    private final FlyWheelConfig shooterConfig = new FlyWheelConfig(motor)
+            // Diameter of the flywheel.
+            .withDiameter(Inches.of(4))
+            // Mass of the flywheel.
+            .withMass(Pounds.of(1))
+            .withTelemetry("ShooterMech", TelemetryVerbosity.HIGH);
+    private final FlyWheel shooter = new FlyWheel(shooterConfig);
 
-  public ShooterSubsystem() {}
+    public ShooterSubsystem() {
+    }
 
-  /**
-   * Gets the current velocity of the shooter.
-   *
-   * @return FlyWheel velocity.
-   */
-  public AngularVelocity getVelocity() {return shooter.getSpeed();}
+    public AngularVelocity getVelocity() {
+        return shooter.getSpeed();
+    }
 
-  /**
-   * Set the shooter velocity.
-   *
-   * @param speed Speed to set.
-   * @return {@link edu.wpi.first.wpilibj2.command.RunCommand}
-   */
-  public Command setVelocity(AngularVelocity speed) {return shooter.setSpeed(speed);}
+    public Command set(double dutyCycle) {
+        return run(()-> shooter.set(dutyCycle));
+    }
 
-  /**
-   * Set the dutycycle of the shooter.
-   *
-   * @param dutyCycle DutyCycle to set.
-   * @return {@link edu.wpi.first.wpilibj2.command.RunCommand}
-   */
-  public Command set(double dutyCycle) {return shooter.set(dutyCycle);}
+    public Command setDutyCycle(Supplier<Double> dutyCycle) {
+        return shooter.set(dutyCycle);
+    }
 
-  public Command setVelocity(Supplier<AngularVelocity> speed) {return shooter.setSpeed(speed);}
+    public Command setVelocity(AngularVelocity speed) {
+        return run(()-> shooter.setSpeed(speed));
+    }
 
-  public Command setDutyCycle(Supplier<Double> dutyCycle) {return shooter.set(dutyCycle);}
+    public Command shoot() {
+        return shooter.setSpeed(RPM.of(100));
+    }
 
-  @Override
-  public void simulationPeriodic()
-  {
-    shooter.simIterate();
-  }
+    public Command stop() {
+        return shooter.setSpeed(RPM.of(0));
+    }
 
-  @Override
-  public void periodic()
-  {
-    shooter.updateTelemetry();
-  }
+    public AngularVelocity getSetpointVelocity(){
+        return shooter.getMechanismSetpointVelocity().get();
+    }
+
+    @Override
+    public void simulationPeriodic() {
+        shooter.simIterate();
+    }
+
+    @Override
+    public void periodic() {
+        shooter.updateTelemetry();
+    }
 }

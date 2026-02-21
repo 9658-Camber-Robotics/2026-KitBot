@@ -69,6 +69,10 @@ public class ClimbSubsystem extends SubsystemBase {
 
     public Command set(double dutycycle) { return climb.set(dutycycle);}
 
+    public Command up(){return set(.75);}
+    public Command down(){return set(-.75);}
+
+
     public Command sysId() { return climb.sysId(Volts.of(7), Volts.of(2).per(Second), Seconds.of(4));}
 
     @Override

@@ -5,13 +5,20 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.*;
 import swervelib.SwerveInputStream;
 
-public class RobotContainer
-{
+import static edu.wpi.first.units.Units.*;
+
+public class RobotContainer {
     private final ShooterSubsystem shooter = new ShooterSubsystem();
     private final ClimbSubsystem climb = new ClimbSubsystem();
     private final HopperSubsystem hopper = new HopperSubsystem();
@@ -20,13 +27,8 @@ public class RobotContainer
 
     private final CommandXboxController driverController = new CommandXboxController(0);
 
-    public RobotContainer()
-    {
-        configureBindings();
-    }
-
     SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
-                    () -> driverController.getLeftY() *-1 ,
+                    () -> driverController.getLeftY() * -1,
 
                     () -> driverController.getLeftX() * -1) // set to 0
             .withControllerRotationAxis(() -> driverController.getRightX() * -1) // driverController::getRightX
@@ -34,45 +36,45 @@ public class RobotContainer
             .scaleTranslation(.8)
             .allianceRelativeControl(true);
 
-    SwerveInputStream driveDirectAngle = driveAngularVelocity.copy().withControllerHeadingAxis(driverController::getRightX,
-                    driverController::getRightY)
-            .headingWhile(true);
-
-    Command driveFieldOrientedDriectAngle = drivebase.driveFieldOriented(driveDirectAngle);
 
     Command driveFieldOrientedAngularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
 
-    Command driveSetpointGen = drivebase.driveWithSetpointGeneratorFieldRelative(driveDirectAngle);
-//Non reality code
+    Command driveSetpointGen = drivebase.driveWithSetpointGeneratorFieldRelative(driveAngularVelocity);
 
-    SwerveInputStream driveAngularVelocitySim = SwerveInputStream.of(drivebase.getSwerveDrive(),
-                    () -> -driverController.getLeftY(),
-                    () -> -driverController.getLeftX())
-            .withControllerRotationAxis(() -> driverController.getRawAxis(2))
-            .deadband(.1)
-            .scaleTranslation(0.8)
-            .allianceRelativeControl(true);
-    // Derive the heading axis with math!
-    SwerveInputStream driveDirectAngleSim     = driveAngularVelocitySim.copy()
-            .withControllerHeadingAxis(() -> Math.sin(
-                            driverController.getRawAxis(
-                                    2) * Math.PI) * (Math.PI * 2),
-                    () -> Math.cos(
-                            driverController.getRawAxis(
-                                    2) * Math.PI) *
-                            (Math.PI * 2))
-            .headingWhile(true);
+    Pose2d blueHub = new Pose2d(new Translation2d(4, 4), Rotation2d.kZero);
+    Pose2d redHub = new Pose2d(new Translation2d(18, 4), Rotation2d.kZero);
 
-    Command driveFieldOrientedDirectAngleSim = drivebase.driveFieldOriented(driveDirectAngleSim);
+    public RobotContainer() {
+        drivebase.setDefaultCommand(driveFieldOrientedAngularVelocity);
+        configureBindings();
+    }
 
-    Command driveSetpointGenSim = drivebase.driveWithSetpointGeneratorFieldRelative(driveDirectAngleSim);
 
     private void configureBindings() {
 
+        driverController.a().whileTrue(climb.up());
+        driverController.b().whileTrue(climb.down());
+
+        driverController.rightBumper().whileTrue(intake.out());
+        driverController.leftBumper().whileTrue(intake.in());
+
+        driverController.rightTrigger().whileTrue(shooter.shoot());
+
+        driverController.leftTrigger().whileTrue(Commands.startRun(() -> {
+            driveAngularVelocity.aim(DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue) == DriverStation.Alliance.Blue ? blueHub : redHub);
+            driveAngularVelocity.aimWhile(true);
+        }, () -> {
+        }).finallyDo(() -> driveAngularVelocity.aimWhile(false)));
+
+        driverController.povDown().whileTrue(drivebase.aimDown(driveAngularVelocity));
+        driverController.povUp().whileTrue(drivebase.aimUp(driveAngularVelocity));
+        driverController.povLeft().whileTrue(drivebase.aimLeft(driveAngularVelocity));
+        driverController.povRight().whileTrue(drivebase.aimRight(driveAngularVelocity));
+
+
     }
 
-    public Command getAutonomousCommand()
-    {
+    public Command getAutonomousCommand() {
         return null;
     }
 }
