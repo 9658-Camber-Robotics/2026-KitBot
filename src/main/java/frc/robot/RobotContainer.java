@@ -1,115 +1,78 @@
 // Copyright (c) FIRST and other WPILib contributors.
+
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.subsystems.SwerveSubsystem;
-import swervelib.SwerveInputStream;
-import frc.robot.subsystems.IntakeRollerSubsystem;
-import frc.robot.subsystems.ShooterSubsystem;
-
-import static edu.wpi.first.units.Units.MetersPerSecond;
-import static edu.wpi.first.units.Units.RotationsPerSecond;
-
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.subsystems.*;
+import swervelib.SwerveInputStream;
 
-/**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
- * subsystems, commands, and trigger mappings) should be declared here.
- */
-public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-  private final IntakeRollerSubsystem m_intakeSubsystem = new IntakeRollerSubsystem();
-  private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem();
+public class RobotContainer
+{
+    private final ShooterSubsystem shooter = new ShooterSubsystem();
+    private final ClimbSubsystem climb = new ClimbSubsystem();
+    private final HopperSubsystem hopper = new HopperSubsystem();
+    private final IntakeRollerSubsystem intake = new IntakeRollerSubsystem();
+    private final SwerveSubsystem drivebase = new SwerveSubsystem();
 
-  // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
-      new CommandXboxController(OperatorConstants.kDriverControllerPort);
+    private final CommandXboxController driverController = new CommandXboxController(0);
 
+    public RobotContainer()
+    {
+        configureBindings();
+    }
 
-
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
-  public RobotContainer() {
-    // Configure the trigger bindings
-    configureBindings();
-  }
-
-    private SwerveSubsystem drivebase;
     SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
-                                                                () -> m_driverController.getLeftY() * -1,
-                                                                () -> m_driverController.getLeftX() * -1)
-                                                                .withControllerRotationAxis(m_driverController::getRightX)
-                                                                .deadband(OperatorConstants.DEADBAND)
-                                                                .scaleTranslation(0.8)
-                                                                .allianceRelativeControl(true);
-  
-   SwerveInputStream driveDriectAngle = driveAngularVelocity.copy().withControllerHeadingAxis(m_driverController::getRightX, 
-                                                                                             m_driverController::getRightY)
-                                                                                             .headingWhile(true);
-  
-  Command driveFieldOrientedDriectAngle = drivebase.driveFieldOriented(driveDriectAngle);
-  
-  Command driveFieldOrientedAngularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
+                    () -> driverController.getLeftY() *-1 ,
 
-   SwerveInputStream driveAngularVelocitySim = SwerveInputStream.of(drivebase.getSwerveDrive(),
-                                                                    () -> m_driverController.getLeftY(),
-                                                                    () -> m_driverController.getLeftX())
-                                                                  .withControllerRotationAxis(() -> m_driverController.getRawAxis(2))
-                                                                  .deadband(OperatorConstants.DEADBAND)
-                                                                  .scaleTranslation(0.8)
-                                                                  .allianceRelativeControl(true);
+                    () -> driverController.getLeftX() * -1) // set to 0
+            .withControllerRotationAxis(() -> driverController.getRightX() * -1) // driverController::getRightX
+            .deadband(.1)
+            .scaleTranslation(.8)
+            .allianceRelativeControl(true);
 
-  // Derive the heading axis with math :(
-  SwerveInputStream driveDirectAngleSim     = driveAngularVelocitySim.copy()
-                                                                      .withControllerHeadingAxis(() -> Math.sin(
-                                                                                                      m_driverController.getRawAxis(
-                                                                                                        2) * Math.PI) * (Math.PI * 2),
-                                                                                                () -> Math.cos(
-                                                                                                      m_driverController.getRawAxis(
-                                                                                                        2) * Math.PI) * 
-                                                                                                        (Math.PI * 2))
-                                                                      .headingWhile(true);
+    SwerveInputStream driveDirectAngle = driveAngularVelocity.copy().withControllerHeadingAxis(driverController::getRightX,
+                    driverController::getRightY)
+            .headingWhile(true);
+
+    Command driveFieldOrientedDriectAngle = drivebase.driveFieldOriented(driveDirectAngle);
+
+    Command driveFieldOrientedAngularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
+
+    Command driveSetpointGen = drivebase.driveWithSetpointGeneratorFieldRelative(driveDirectAngle);
+//Non reality code
+
+    SwerveInputStream driveAngularVelocitySim = SwerveInputStream.of(drivebase.getSwerveDrive(),
+                    () -> -driverController.getLeftY(),
+                    () -> -driverController.getLeftX())
+            .withControllerRotationAxis(() -> driverController.getRawAxis(2))
+            .deadband(.1)
+            .scaleTranslation(0.8)
+            .allianceRelativeControl(true);
+    // Derive the heading axis with math!
+    SwerveInputStream driveDirectAngleSim     = driveAngularVelocitySim.copy()
+            .withControllerHeadingAxis(() -> Math.sin(
+                            driverController.getRawAxis(
+                                    2) * Math.PI) * (Math.PI * 2),
+                    () -> Math.cos(
+                            driverController.getRawAxis(
+                                    2) * Math.PI) *
+                            (Math.PI * 2))
+            .headingWhile(true);
 
     Command driveFieldOrientedDirectAngleSim = drivebase.driveFieldOriented(driveDirectAngleSim);
 
-    
+    Command driveSetpointGenSim = drivebase.driveWithSetpointGeneratorFieldRelative(driveDirectAngleSim);
 
+    private void configureBindings() {
 
+    }
 
-  /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
-   * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-   * joysticks}.
-   */
-  private void configureBindings() {
-    m_diffDriveSubsystem.setDefaultCommand(
-      m_diffDriveSubsystem.arcadeDrive(
-          m_driverController :: getLeftY,
-          m_driverController :: getRightX));
-    
-     m_driverController.button(1).whileTrue(m_intakeSubsystem.out(0.8));
-     m_driverController.button(2).whileTrue(m_intakeSubsystem.in(0.8));
-     m_driverController.button(3).whileTrue(m_shooterSubsystem.setVelocity(RotationsPerSecond.of(200)));
-  }
-
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-   return null;
-  }
+    public Command getAutonomousCommand()
+    {
+        return null;
+    }
 }
