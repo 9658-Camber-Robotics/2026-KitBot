@@ -1,22 +1,18 @@
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.Amps;
-import static edu.wpi.first.units.Units.Inches;
-import static edu.wpi.first.units.Units.Pounds;
-import static edu.wpi.first.units.Units.RPM;
-import static edu.wpi.first.units.Units.Second;
-import static edu.wpi.first.units.Units.Seconds;
-
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
 import yams.mechanisms.config.FlyWheelConfig;
@@ -27,6 +23,8 @@ import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
+
+import static edu.wpi.first.units.Units.*;
 
 public class ShooterSubsystem extends SubsystemBase {
     private final SparkMax ShooterMotor = new SparkMax(10, MotorType.kBrushless);
@@ -67,7 +65,7 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public Command setVelocity(AngularVelocity speed) {
-        return run(()-> shooter.setSpeed(speed));
+        return run(()-> shooter.run(speed));
     }
 
     public Command shoot() {
@@ -90,5 +88,10 @@ public class ShooterSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         shooter.updateTelemetry();
+    }
+
+    Debouncer shooterDebouncer = new Debouncer(Milliseconds.of(100).in(Second), Debouncer.DebounceType.kFalling);
+    public Trigger isNear(AngularVelocity speed) {
+        return shooter.isNear(speed, RPM.of(10));
     }
 }

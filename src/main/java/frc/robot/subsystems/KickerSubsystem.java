@@ -40,7 +40,7 @@ public class KickerSubsystem extends SubsystemBase {
 
     public void setHopperDutycycle(double dutycycle) {hopperMotorController.setDutyCycle(dutycycle);}
 
-    public Command hopperIn() {return setHopper(.75);}
+    public Command indexFuel() {return setHopper(.75);}
     public Command hopperOut() {return setHopper(-.75);}
 
 

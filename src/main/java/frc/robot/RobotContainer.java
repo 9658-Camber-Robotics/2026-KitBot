@@ -8,6 +8,7 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -18,7 +19,7 @@ import swervelib.SwerveInputStream;
 public class RobotContainer {
     private final ShooterSubsystem shooter = new ShooterSubsystem();
     private final ClimbSubsystem climb = new ClimbSubsystem();
-    private final KickerSubsystem hopper = new KickerSubsystem();
+    private final KickerSubsystem kicker = new KickerSubsystem();
     private final IntakeRollerSubsystem intake = new IntakeRollerSubsystem();
     private final SwerveSubsystem drivebase = new SwerveSubsystem();
 
@@ -45,7 +46,7 @@ public class RobotContainer {
         drivebase.setDefaultCommand(driveFieldOrientedAngularVelocity);
         shooter.setDefaultCommand(shooter.set(0));
         climb.setDefaultCommand(shooter.set(0));
-        hopper.setDefaultCommand(shooter.set(0));
+        kicker.setDefaultCommand(shooter.set(0));
         intake.setDefaultCommand(shooter.set(0));
         configureBindings();
     }
@@ -72,6 +73,23 @@ public class RobotContainer {
         driverController.povUp().whileTrue(drivebase.aimUp(driveAngularVelocity));
         driverController.povLeft().whileTrue(drivebase.aimLeft(driveAngularVelocity));
         driverController.povRight().whileTrue(drivebase.aimRight(driveAngularVelocity));
+    }
+
+    //    public Command whenShooterSpeed("speed")thenKickerShoots;
+    public Command shoot(AngularVelocity speed) {
+        return Commands.parallel(shooter.setVelocity(speed), Commands.waitUntil(shooter.isNear(speed)).andThen(kicker.indexFuel()).repeatedly());
+        // for the shooter
+        // fire one ball, shooter speed drops to expected point with debounce
+        // stops so feeder can stop; reverse accelerate
+        // shooter gets up to speed (start accerelator) start feeder, go back to top
+
+
+        // create debounce stuff
+        // DigitalInput input = new Digital Input (0);
+        // need a debouncer
+        // Debouncer m_debouncer = new Debouncer (0.1, Debouncer.DebounceType.kBoth);
+        // false signal --> if(m_debouncer.calculate input.get()));
+
     }
 
     public Command getAutonomousCommand() {
