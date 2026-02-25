@@ -16,6 +16,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.*;
 import swervelib.SwerveInputStream;
 
+import static edu.wpi.first.units.Units.RPM;
+
 public class RobotContainer {
     private final ShooterSubsystem shooter = new ShooterSubsystem();
     private final ClimbSubsystem climb = new ClimbSubsystem();
@@ -60,7 +62,7 @@ public class RobotContainer {
         driverController.rightBumper().whileTrue(intake.out());
         driverController.leftBumper().whileTrue(intake.in());
 
-        driverController.rightTrigger().whileTrue(shooter.shoot());
+        driverController.rightTrigger().whileTrue(shoot(RPM.of(4000)));
 
         //auto aim
         driverController.leftTrigger().whileTrue(Commands.startRun(() -> {
