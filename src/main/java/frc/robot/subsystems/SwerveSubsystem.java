@@ -36,6 +36,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 import org.json.simple.parser.ParseException;
 import swervelib.SwerveDrive;
+import swervelib.SwerveInputStream;
 import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
 import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
@@ -283,5 +284,10 @@ public class SwerveSubsystem extends SubsystemBase
   public double distanceFromHubMeters()
   {
     return getPose().getTranslation().getDistance(AllianceFlipUtil.apply(Hub.topCenterPoint.toTranslation2d()));
+  }
+
+  public void driveFieldOrientedSetpoint(ChassisSpeeds speeds)
+  {
+    swerveDrive.driveFieldOriented(speeds);
   }
 }

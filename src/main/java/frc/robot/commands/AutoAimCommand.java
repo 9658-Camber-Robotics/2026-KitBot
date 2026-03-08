@@ -36,7 +36,7 @@ public class AutoAimCommand extends Command
   @Override
   public void execute()
   {
-    swerveSubsystem.driveFieldOriented(swerveInputStream);
+    swerveSubsystem.driveFieldOrientedSetpoint(swerveInputStream.get());
   }
 
   @Override
