@@ -1,6 +1,11 @@
 package frc.robot.commands;
 
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.RPM;
+
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.Kicker;
 import frc.robot.Constants.Shooter;
@@ -8,6 +13,10 @@ import frc.robot.Constants.Shooter.Setpoints;
 import frc.robot.subsystems.IntakeRollerSubsystem;
 import frc.robot.subsystems.KickerSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.SwerveSubsystem;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
 
 
 public class ShootKickAndIndexCommand extends Command
@@ -17,11 +26,15 @@ public class ShootKickAndIndexCommand extends Command
   private final KickerSubsystem       kickerSubsystem;
   private final ShooterSubsystem      shooterSubsystem;
 
-  private final AngularVelocity goal;
-//  private final Timer timer = new Timer();
-
+  private final Supplier<AngularVelocity> goal;
+  private final List<Data>                 shots   = List.of(
+      new Data(Meters.of(0.5), RPM.of(3000))
+                                                            );
+  private final InterpolatingDoubleTreeMap shotMap = InterpolatingDoubleTreeMap.ofEntries(shots.stream()
+                                                                                               .map(Data::toEntry)
+                                                                                               .toArray(Map.Entry[]::new));
   public ShootKickAndIndexCommand(IntakeRollerSubsystem intakeRollerSubsystem, KickerSubsystem kickerSubsystem,
-                                  ShooterSubsystem shooterSubsystem, AngularVelocity goalRPM)
+                                  ShooterSubsystem shooterSubsystem, Supplier<AngularVelocity> goalRPM)
   {
     this.intakeRollerSubsystem = intakeRollerSubsystem;
     this.kickerSubsystem = kickerSubsystem;
@@ -32,40 +45,50 @@ public class ShootKickAndIndexCommand extends Command
     addRequirements(this.intakeRollerSubsystem, this.kickerSubsystem, this.shooterSubsystem);
   }
 
+  public ShootKickAndIndexCommand(IntakeRollerSubsystem intakeRollerSubsystem, KickerSubsystem kickerSubsystem,
+                                  ShooterSubsystem shooterSubsystem, AngularVelocity goalRPM)
+  {
+    this(intakeRollerSubsystem, kickerSubsystem, shooterSubsystem, () -> goalRPM);
+  }
+
+  public ShootKickAndIndexCommand(IntakeRollerSubsystem intakeRollerSubsystem, KickerSubsystem kickerSubsystem,
+                                  ShooterSubsystem shooterSubsystem, SwerveSubsystem swerveSubsystem)
+  {
+    this.intakeRollerSubsystem = intakeRollerSubsystem;
+    this.kickerSubsystem = kickerSubsystem;
+    this.shooterSubsystem = shooterSubsystem;
+    this.goal = () -> {return RPM.of(shotMap.get(swerveSubsystem.distanceFromHubMeters()));};
+    // each subsystem used by the command must be passed into the
+    // addRequirements() method (which takes a vararg of Subsystem)
+    addRequirements(this.intakeRollerSubsystem, this.kickerSubsystem, this.shooterSubsystem);
+  }
+
   @Override
   public void initialize()
   {
     kickerSubsystem.setVelocity(Kicker.Setpoints.kickingSpeed);
     intakeRollerSubsystem.setDutyCycle(0);
-    shooterSubsystem.setVelocity(Kicker.Setpoints.kickingSpeed);
+    shooterSubsystem.setVelocity(goal.get());
   }
 
   @Override
   public void execute()
   {
-    if (Shooter.flyWheelRecoveryDebouncer.calculate(shooterSubsystem.getVelocity().isNear(goal, Setpoints.tolerance)))
+    shooterSubsystem.setVelocity(goal.get());
+    if (Shooter.flyWheelRecoveryDebouncer.calculate(shooterSubsystem.getVelocity()
+                                                                    .isNear(goal.get(), Setpoints.tolerance)))
     {
-      /*
-      timer.stop();
-      timer.reset();
-      kickerSubsystem.setVelocity(Kicker.Setpoints.kickingSpeed);
-       */
       intakeRollerSubsystem.setDutyCycleCommand(0.5);
     } else
     {
-      /*
-      if(timer.isRunning() && timer.hasElapsed(Seconds.of(0.1)))
-      {
-        kickerSubsystem.setVelocity(Kicker.Setpoints.kickingSpeed);
-      } else {
-        timer.start();
-        // Set the kicker to go in the opposite direction at half power.
-        // We may want to put a motion profile here.
-        kickerSubsystem.setVelocity(Kicker.Setpoints.kickingSpeed.times(-0.5));
-      }*/
-
       intakeRollerSubsystem.setDutyCycleCommand(0);
     }
+  }
+
+  record Data(Distance distance, AngularVelocity velocity)
+  {
+
+    public Map.Entry<Double, Double> toEntry() {return Map.entry(distance.in(Meters), velocity.in(RPM));}
   }
 
   @Override

@@ -28,6 +28,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.utils.AllianceFlipUtil;
+import frc.robot.utils.FieldConstants.Hub;
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicReference;
@@ -276,5 +278,10 @@ public class SwerveSubsystem extends SubsystemBase
   public Command lock()
   {
     return run(swerveDrive::lockPose);
+  }
+
+  public double distanceFromHubMeters()
+  {
+    return getPose().getTranslation().getDistance(AllianceFlipUtil.apply(Hub.topCenterPoint.toTranslation2d()));
   }
 }
