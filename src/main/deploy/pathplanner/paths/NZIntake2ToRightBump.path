@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 7.9130411449016105,
+        "y": 2.355670840787119
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 7.426279069767442,
+        "y": 2.4043470483005365
+      },
+      "isLocked": false,
+      "linkedName": "NZIntake2"
+    },
+    {
+      "anchor": {
+        "x": 5.690161001788908,
+        "y": 2.355670840787119
+      },
+      "prevControl": {
+        "x": 6.744812164579606,
+        "y": 2.3718962432915918
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "RightBumpNZ"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "reversed": false,
+  "folder": null,
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -90.0
+  },
+  "useDefaultConstraints": true
+}

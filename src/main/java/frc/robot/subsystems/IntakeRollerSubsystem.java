@@ -2,60 +2,56 @@ package frc.robot.subsystems;
 
 import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.SparkMax;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.Intake;
+import yams.mechanisms.velocity.FlyWheel;
 import yams.motorcontrollers.SmartMotorController;
-import yams.motorcontrollers.SmartMotorControllerConfig;
 import yams.motorcontrollers.local.SparkWrapper;
 
-import static edu.wpi.first.units.Units.*;
+public class IntakeRollerSubsystem extends SubsystemBase
+{
 
-public class IntakeRollerSubsystem extends SubsystemBase {
+  private final SparkMax motorController = new SparkMax(1, SparkLowLevel.MotorType.kBrushless);
 
-    // make SparkMax
-    // make SmartMotorControllerConfig
-    // make SmartMotorController
-    // DO NOT MAKE MECHANIMS
+  private final SmartMotorController intakeSMC = new SparkWrapper(motorController,
+                                                                  Intake.motor,
+                                                                  Intake.smc.clone().withSubsystem(this));
+  private final FlyWheel             intake    = new FlyWheel(Intake.config.clone()
+                                                                           .withSmartMotorController(intakeSMC));
 
-    private final SparkMax intake =  new SparkMax(1, SparkLowLevel.MotorType.kBrushless);
-    private final SmartMotorControllerConfig smcConfig = new SmartMotorControllerConfig(this)
-            .withClosedLoopController(300, 0, 0)
-            .withFeedforward(new SimpleMotorFeedforward(0, 12.0 / RadiansPerSecond.of(DCMotor.getNEO(1).freeSpeedRadPerSec).in(RotationsPerSecond)))
-            .withStatorCurrentLimit(Amps.of(120))
-            .withSupplyCurrentLimit(Amps.of(70))
-            .withIdleMode(SmartMotorControllerConfig.MotorMode.COAST);
-    //          .withMomentOfInertia(YUnits.PoundSquareFeet.of(1));
+  public IntakeRollerSubsystem() {}
 
-    private final SmartMotorController intakeSMC = new SparkWrapper(intake, DCMotor.getNEO(1), smcConfig.clone());
+  @Override
+  public void simulationPeriodic()
+  {
+    intake.simIterate();
+  }
 
-    public IntakeRollerSubsystem() {}
+  @Override
+  public void periodic()
+  {
+    intake.simIterate();
+  }
 
-    @Override
-    public void simulationPeriodic() {
-        // SMC.simIterate
-    }
+  public void setDutyCycle(double dutyCycle)
+  {
+    intake.setDutyCycleSetpoint(dutyCycle);
+  }
 
-    @Override
-    public void periodic() {
-        // SMC.updateTelemetry()
-    }
+  public void setVelocity(AngularVelocity velocity)
+  {
+    intake.setMechanismVelocitySetpoint(velocity);
+  }
 
-    public Command setIntakeRoller(double speed) {
-        return run(() -> intake.set(speed));
-    }
+  public Command setDutyCycleCommand(double dutycycle)
+  {
+    return intake.set(dutycycle);
+  }
 
-    public Command out() {
-        return setIntakeRoller(-1);
-    }
-
-    public Command in() {
-        return setIntakeRoller(1);
-    }
-
-    public Command stop() {
-        return setIntakeRoller(0);
-    }
-
+  public Command setVelocityCommand(AngularVelocity of)
+  {
+    return intake.run(of);
+  }
 }

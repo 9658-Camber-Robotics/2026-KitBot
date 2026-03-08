@@ -1,0 +1,53 @@
+package frc.robot.commands;
+
+import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.SwerveDrive.Setpoints;
+import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.utils.AllianceFlipUtil;
+import swervelib.SwerveInputStream;
+
+
+public class AutoAimCommand extends Command
+{
+
+  private final SwerveSubsystem   swerveSubsystem;
+  private final SwerveInputStream swerveInputStream;
+
+  public AutoAimCommand(SwerveSubsystem swerveSubsystem, SwerveInputStream swerveInputStream)
+  {
+    this.swerveSubsystem = swerveSubsystem;
+    this.swerveInputStream = swerveInputStream.copy();
+    // each subsystem used by the command must be passed into the
+    // addRequirements() method (which takes a vararg of Subsystem)
+    addRequirements(this.swerveSubsystem);
+  }
+
+  @Override
+  public void initialize()
+  {
+    swerveInputStream.aim(AllianceFlipUtil.apply(Setpoints.robotPoseAtDepot))
+                     .aimWhile(true)
+                     .scaleTranslation(0.3);
+
+  }
+
+  @Override
+  public void execute()
+  {
+    swerveSubsystem.driveFieldOriented(swerveInputStream);
+  }
+
+  @Override
+  public boolean isFinished()
+  {
+    // TODO: Make this return true when this Command no longer needs to run execute()
+    return false;
+  }
+
+  @Override
+  public void end(boolean interrupted)
+  {
+    swerveInputStream.aimWhile(false)
+                     .scaleTranslation(1);
+  }
+}

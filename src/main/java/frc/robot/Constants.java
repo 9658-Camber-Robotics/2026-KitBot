@@ -4,55 +4,174 @@
 
 package frc.robot;
 
-import edu.wpi.first.units.measure.*;
+import static edu.wpi.first.units.Units.Amps;
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Pounds;
+import static edu.wpi.first.units.Units.RPM;
+
+import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularVelocity;
+import frc.robot.utils.FieldConstants.Depot;
 import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
 import yams.gearing.Sprocket;
-
-import static edu.wpi.first.units.Units.*;
+import yams.mechanisms.config.ArmConfig;
+import yams.mechanisms.config.FlyWheelConfig;
+import yams.motorcontrollers.SmartMotorControllerConfig;
+import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
+import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
+import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 
 /**
- * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
- * constants. This class should not be used for any other purpose. All constants should be declared
- * globally (i.e. public static). Do not put anything functional in this class.
+ * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean constants. This
+ * class should not be used for any other purpose. All constants should be declared globally (i.e. public static). Do
+ * not put anything functional in this class.
  *
  * <p>It is advised to statically import this class (or one of its inner classes) wherever the
  * constants are needed, to reduce verbosity.
  */
-public final class Constants {
+public final class Constants
+{
 
-    public static class OperatorConstants {
-        public static final int kDriverControllerPort = 0;
+  public static class SwerveDrive
+  {
+
+    public static class Setpoints
+    {
+
+      public static Pose2d robotPoseAtDepot = new Pose2d(Depot.depotCenter.toTranslation2d(), Rotation2d.kZero)
+          .plus(new Transform2d(0, 0, Rotation2d.k180deg));
+    }
+  }
+
+  public static final TelemetryVerbosity verbosity = TelemetryVerbosity.HIGH;
+
+  public static class Climber
+  {
+
+    public static class Setpoints
+    {
+
+      public static final Angle climbSetpoint   = Degrees.of(180);
+      public static final Angle releaseSetpoint = Degrees.of(45);
     }
 
-    public static class ClimbConstants {
+    public static final DCMotor                    motor = DCMotor.getNEO(2);
+    public static final SmartMotorControllerConfig smc   = new SmartMotorControllerConfig()
+        .withControlMode(ControlMode.CLOSED_LOOP)
+        .withTelemetry("ClimberMotor", verbosity)
+        .withIdleMode(MotorMode.BRAKE)
+        .withMotorInverted(false)
+        .withStatorCurrentLimit(Amps.of(60))
+        .withGearing(new MechanismGearing(GearBox.fromReductionStages(80), Sprocket.fromStages("16:48")))
+        .withClosedLoopController(0, 0, 0)
+        .withFeedforward(new ArmFeedforward(0, 0, 0));
 
-        public static final String ArmPositionKey = "ArmPosition";
-        public static final String ArmPKey = "ArmP";
+    public static final ArmConfig config = new ArmConfig()
+        .withTelemetry("Climber", verbosity)
+        .withHardLimit(Degrees.of(-180), Degrees.of(180))
+        .withStartingPosition(Degrees.of(-180))
+        .withLength(Inches.of(30))
+        .withMass(Pounds.of(8));
+  }
 
-        // The P gain for the PID controller that drives this arm.
-        public static final double ClimbKp = 50.0;
-        public static final double ClimbKi = 0.0;
-        public static final double ClimbKd = 0.0;
+  public static class Intake
+  {
 
-        // distance per pulse = (angle per revolution) / (pulses per revolution)
-        //  = (2 * PI rads) / (4096 pulses)
-        public static final double ArmEncoderDistPerPulse = 2.0 * Math.PI / 4096;
+    public static class Setpoints
+    {
 
-        public static final MechanismGearing ClimbGearBox = new MechanismGearing(GearBox.fromReductionStages(80), Sprocket.fromStages("16:48"));
-        public static final Mass ClimbMass = Pounds.of(8); // Kilograms
-        public static final Distance ClimbLength = Inches.of(30);
-        public static final Angle softMaxAngle = Degrees.of(225);
-        public static final Angle softMinAngle = Degrees.of(-45);
-        public static final Angle hardMaxAngle = Degrees.of(225);
-        public static final Angle hardMinAngle = Degrees.of(-45);
-        public static final Angle startingAngle = Degrees.of(225);
-
-        //yippee
-        public static final Angle angle1 = Degrees.of(0); //Rotations.of(-0.74);
-        public static final Angle angle2 = Degrees.of(15); //Rotations.of(-0.788);
-        public static final Angle intakeAngle = Degrees.of(45); //Rotations.of(-0.69);
+      public static final AngularVelocity intakeRPM  = RPM.of(-3000);
+      public static final AngularVelocity outtakeRPM = RPM.of(2000);
     }
 
-    public static double maxSpeed;
+    public static final DCMotor                    motor  = DCMotor.getNEO(1);
+    public static final SmartMotorControllerConfig smc    = new SmartMotorControllerConfig()
+        .withControlMode(ControlMode.CLOSED_LOOP)
+        .withTelemetry("IntakeMotor", verbosity)
+        .withIdleMode(MotorMode.COAST)
+        .withMotorInverted(false)
+        .withStatorCurrentLimit(Amps.of(40))
+        .withGearing(1)
+        .withClosedLoopController(0, 0, 0)
+        .withFeedforward(new SimpleMotorFeedforward(0, 0, 0));
+    public static final FlyWheelConfig             config = new FlyWheelConfig()
+        .withTelemetry("Intake", verbosity)
+        .withMass(Pounds.of(8))
+        .withDiameter(Inches.of(4));
+  }
+
+  public static class Kicker
+  {
+
+    public static class Setpoints
+    {
+
+      public static final AngularVelocity kickingSpeed = RPM.of(1000);
+    }
+
+    public static final DCMotor                    motor  = DCMotor.getNEO(1);
+    public static final SmartMotorControllerConfig smc    = new SmartMotorControllerConfig()
+        .withControlMode(ControlMode.CLOSED_LOOP)
+        .withTelemetry("KickerMotor", verbosity)
+        .withIdleMode(MotorMode.COAST)
+        .withMotorInverted(false)
+        .withStatorCurrentLimit(Amps.of(80))
+        .withGearing(1)
+        .withClosedLoopController(0, 0, 0)
+        .withFeedforward(new SimpleMotorFeedforward(0, 0, 0));
+    public static final FlyWheelConfig             config = new FlyWheelConfig()
+        .withTelemetry("Kicker", verbosity)
+        .withMass(Pounds.of(8))
+        .withDiameter(Inches.of(4));
+  }
+
+  public static class Shooter
+  {
+
+    public static class Setpoints
+    {
+
+      public static final AngularVelocity tolerance           = RPM.of(50);
+      public static final AngularVelocity hubRPM              = RPM.of(3000);
+      public static final AngularVelocity midRPM              = RPM.of(2000);
+      public static final AngularVelocity autonomousPeriodRPM = RPM.of(3000);
+
+    }
+
+    public static final Debouncer                  flyWheelRecoveryDebouncer = new Debouncer(0.25,
+                                                                                             DebounceType.kFalling);
+    public static final DCMotor                    motor                     = DCMotor.getNEO(1);
+    public static final SmartMotorControllerConfig smc                       = new SmartMotorControllerConfig()
+        .withControlMode(ControlMode.CLOSED_LOOP)
+        .withTelemetry("ShooterMotor", verbosity)
+        .withIdleMode(MotorMode.COAST)
+        .withMotorInverted(false)
+        .withStatorCurrentLimit(Amps.of(80))
+        .withGearing(1)
+        .withClosedLoopController(0, 0, 0)
+        .withFeedforward(new SimpleMotorFeedforward(0, 0, 0));
+    public static final FlyWheelConfig             config                    = new FlyWheelConfig()
+        .withTelemetry("Shooter", verbosity)
+        .withDiameter(Inches.of(4))
+        .withMass(Pounds.of(2));
+  }
+
+  public static class OperatorConstants
+  {
+
+    public static final int kDriverControllerPort = 0;
+  }
+
+
+  public static double maxSpeed;
 }

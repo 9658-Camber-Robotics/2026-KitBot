@@ -5,96 +5,99 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.units.measure.AngularVelocity;
-import edu.wpi.first.wpilibj.DriverStation;
+import static edu.wpi.first.units.Units.Seconds;
+
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.events.EventTrigger;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.subsystems.*;
+import frc.robot.Constants.Climber.Setpoints;
+import frc.robot.Constants.Intake;
+import frc.robot.Constants.Shooter;
+import frc.robot.Constants.SwerveDrive;
+import frc.robot.commands.AutoAimCommand;
+import frc.robot.commands.ShootKickAndIndexCommand;
+import frc.robot.subsystems.ClimbSubsystem;
+import frc.robot.subsystems.IntakeRollerSubsystem;
+import frc.robot.subsystems.KickerSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.SwerveSubsystem;
 import swervelib.SwerveInputStream;
 
-import static edu.wpi.first.units.Units.RPM;
+public class RobotContainer
+{
 
-public class RobotContainer {
-    private final ShooterSubsystem shooter = new ShooterSubsystem();
-    private final ClimbSubsystem climb = new ClimbSubsystem();
-    private final KickerSubsystem kicker = new KickerSubsystem();
-    private final IntakeRollerSubsystem intake = new IntakeRollerSubsystem();
-    private final SwerveSubsystem drivebase = new SwerveSubsystem();
+  private final ShooterSubsystem      shooter   = new ShooterSubsystem();
+  private final ClimbSubsystem        climb     = new ClimbSubsystem();
+  private final KickerSubsystem       kicker    = new KickerSubsystem();
+  private final IntakeRollerSubsystem intake    = new IntakeRollerSubsystem();
+  private final SwerveSubsystem       drivebase = new SwerveSubsystem();
 
-    private final CommandXboxController driverController = new CommandXboxController(0);
+  private final CommandXboxController driverController = new CommandXboxController(0);
 
-    SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
-                    () -> driverController.getLeftY() * -1,
+  SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
+                                                                () -> driverController.getLeftY() * -1,
 
-                    () -> driverController.getLeftX() * -1) // set to 0
-            .withControllerRotationAxis(() -> driverController.getRightX() * -1) // driverController::getRightX
-            .deadband(.1)
-            .scaleTranslation(.8)
-            .allianceRelativeControl(true);
-
-
-    Command driveFieldOrientedAngularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
-
-    Command driveSetpointGen = drivebase.driveWithSetpointGeneratorFieldRelative(driveAngularVelocity);
-
-    Pose2d blueHub = new Pose2d(new Translation2d(4, 4), Rotation2d.kZero);
-    Pose2d redHub = new Pose2d(new Translation2d(18, 4), Rotation2d.kZero);
-
-    public RobotContainer() {
-        drivebase.setDefaultCommand(driveFieldOrientedAngularVelocity);
-        shooter.setDefaultCommand(shooter.set(0));
-        climb.setDefaultCommand(shooter.set(0));
-        kicker.setDefaultCommand(shooter.set(0));
-        intake.setDefaultCommand(shooter.set(0));
-        configureBindings();
-    }
+                                                                () -> driverController.getLeftX() * -1) // set to 0
+                                                            .withControllerRotationAxis(() ->
+                                                                                            driverController.getRightX() *
+                                                                                            -1) // driverController::getRightX
+                                                            .deadband(.1)
+                                                            .scaleTranslation(.8)
+                                                            .allianceRelativeControl(true);
 
 
-    private void configureBindings() {
+  Command driveFieldOrientedAngularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
 
-        driverController.a().whileTrue(climb.up());
-        driverController.b().whileTrue(climb.down());
+  Command driveSetpointGen = drivebase.driveWithSetpointGeneratorFieldRelative(driveAngularVelocity);
 
-        driverController.rightBumper().whileTrue(intake.out());
-        driverController.leftBumper().whileTrue(intake.in());
 
-        driverController.rightTrigger().whileTrue(shoot(RPM.of(4000)));
+  public RobotContainer()
+  {
+    drivebase.setDefaultCommand(driveFieldOrientedAngularVelocity);
+    shooter.setDefaultCommand(shooter.setDutycycleCommand(0));
+    climb.setDefaultCommand(climb.setDutycyleCommand(0));
+    kicker.setDefaultCommand(kicker.setDutycycleCommand(0.0));
+    intake.setDefaultCommand(intake.setDutyCycleCommand(0.0));
 
-        //auto aim
-        driverController.leftTrigger().whileTrue(Commands.startRun(() -> {
-            driveAngularVelocity.aim(DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue) == DriverStation.Alliance.Blue ? blueHub : redHub);
-            driveAngularVelocity.aimWhile(true);
-        }, () -> {
-        }).finallyDo(() -> driveAngularVelocity.aimWhile(false)));
+    new EventTrigger("StartIntake").onTrue(intake.setVelocityCommand(Intake.Setpoints.intakeRPM));
+    new EventTrigger("StopIntake").onTrue(intake.setDutyCycleCommand(0));
+    NamedCommands.registerCommand("ShootBalls",
+                                  shooter.setVelocityCommand(Shooter.Setpoints.autonomousPeriodRPM)
+                                         .withTimeout(Seconds.of(3)));
+    configureBindings();
+  }
 
-        driverController.povDown().whileTrue(drivebase.aimDown(driveAngularVelocity));
-        driverController.povUp().whileTrue(drivebase.aimUp(driveAngularVelocity));
-        driverController.povLeft().whileTrue(drivebase.aimLeft(driveAngularVelocity));
-        driverController.povRight().whileTrue(drivebase.aimRight(driveAngularVelocity));
-    }
 
-    //    public Command whenShooterSpeed("speed")thenKickerShoots;
-    public Command shoot(AngularVelocity speed) {
-        return Commands.parallel(shooter.setVelocity(speed), Commands.waitUntil(shooter.isNear(speed)).andThen(kicker.indexFuel()).repeatedly());
-        // for the shooter
-        // fire one ball, shooter speed drops to expected point with debounce
-        // stops so feeder can stop; reverse accelerate
-        // shooter gets up to speed (start accerelator) start feeder, go back to top
-//k
+  private void configureBindings()
+  {
 
-        // create debounce stuff, initialize digital input stuff
-        // DigitalInput input = new Digital Input (0);
-        // need a debouncer
-        // Debouncer m_debouncer = new Debouncer (0.1, Debouncer.DebounceType.kBoth);
-        // false signal --> if(m_debouncer.calculate input.get()));
+    driverController.a().whileTrue(climb.setAngleCommand(Setpoints.climbSetpoint));
+    driverController.b().whileTrue(climb.setAngleCommand(Setpoints.releaseSetpoint));
+    // Prevents Swerve Drive from moving by making an X
+    driverController.x().whileTrue(drivebase.lock());
 
-    }
+    // Intake and outtake controls.
+    driverController.rightBumper().whileTrue(intake.setVelocityCommand(Intake.Setpoints.intakeRPM));
+    driverController.leftBumper().whileTrue(intake.setVelocityCommand(Intake.Setpoints.outtakeRPM));
 
-    public Command getAutonomousCommand() {
-        return null;
-    }
+    driverController.rightTrigger().whileTrue(new ShootKickAndIndexCommand(intake,
+                                                                           kicker,
+                                                                           shooter,
+                                                                           Shooter.Setpoints.midRPM));
+    driverController.y().whileTrue(new ShootKickAndIndexCommand(intake, kicker, shooter, Shooter.Setpoints.hubRPM));
+
+    driverController.start().and(driverController.back()).onTrue(drivebase.zeroGyroWithAllianceCommand());
+    //auto aim
+    driverController.povUp().onTrue(drivebase.resetOdometryCommand(SwerveDrive.Setpoints.robotPoseAtDepot));
+
+    driverController.leftTrigger().whileTrue(new AutoAimCommand(drivebase, driveAngularVelocity));
+
+  }
+
+
+  public Command getAutonomousCommand()
+  {
+    return drivebase.getAutonomousCommand("Auto1");
+  }
 }

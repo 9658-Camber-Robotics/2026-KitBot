@@ -1,0 +1,73 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "HubToDepot"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 5.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "DepotToShoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShootBalls"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ShootToLeftBump"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LeftBumpToNZ"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LeftBumpNZToIntake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "NZTraversal"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "NZIntake2ToRightBump"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RightBumpNZToRightBump"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}
