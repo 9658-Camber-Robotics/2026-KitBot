@@ -1,9 +1,11 @@
 package frc.robot.commands;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.SwerveDrive.Setpoints;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.utils.AllianceFlipUtil;
+import frc.robot.utils.FieldConstants.Hub;
 import swervelib.SwerveInputStream;
 
 
@@ -25,7 +27,7 @@ public class AutoAimCommand extends Command
   @Override
   public void initialize()
   {
-    swerveInputStream.aim(AllianceFlipUtil.apply(Setpoints.robotPoseAtDepot))
+    swerveInputStream.aim(AllianceFlipUtil.apply(new Pose2d(Hub.topCenterPoint.toTranslation2d(), Rotation2d.kZero)))
                      .aimWhile(true)
                      .scaleTranslation(0.3);
 
