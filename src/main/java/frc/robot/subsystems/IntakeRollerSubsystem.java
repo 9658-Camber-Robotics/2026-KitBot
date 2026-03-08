@@ -5,6 +5,7 @@ import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.CANIDS;
 import frc.robot.Constants.Intake;
 import yams.mechanisms.velocity.FlyWheel;
 import yams.motorcontrollers.SmartMotorController;
@@ -13,7 +14,7 @@ import yams.motorcontrollers.local.SparkWrapper;
 public class IntakeRollerSubsystem extends SubsystemBase
 {
 
-  private final SparkMax motorController = new SparkMax(1, SparkLowLevel.MotorType.kBrushless);
+  private final SparkMax motorController = new SparkMax(CANIDS.intakeCanID, SparkLowLevel.MotorType.kBrushless);
 
   private final SmartMotorController intakeSMC = new SparkWrapper(motorController,
                                                                   Intake.motor,

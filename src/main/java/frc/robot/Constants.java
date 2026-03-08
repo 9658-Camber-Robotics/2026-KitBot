@@ -42,6 +42,15 @@ import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 public final class Constants
 {
 
+  public static class CANIDS
+  {
+
+    public static final int shooterCANID = 13;
+    public static final int kickerCANID  = 14;
+    public static final int intakeCanID  = 15;
+    public static final int climbCANID   = 16;
+  }
+
   public static class SwerveDrive
   {
 

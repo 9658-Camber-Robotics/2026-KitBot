@@ -5,6 +5,7 @@ import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.CANIDS;
 import frc.robot.Constants.Shooter;
 import yams.mechanisms.velocity.FlyWheel;
 import yams.motorcontrollers.SmartMotorController;
@@ -13,7 +14,7 @@ import yams.motorcontrollers.local.SparkWrapper;
 public class ShooterSubsystem extends SubsystemBase
 {
 
-  private final SparkMax             motorController        = new SparkMax(10, MotorType.kBrushless);
+  private final SparkMax motorController = new SparkMax(CANIDS.shooterCANID, MotorType.kBrushless);
   private final SmartMotorController shooterMotorController = new SparkWrapper(motorController,
                                                                                Shooter.motor,
                                                                                Shooter.smc.clone().withSubsystem(this));

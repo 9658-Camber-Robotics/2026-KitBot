@@ -9,6 +9,7 @@ import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.CANIDS;
 import frc.robot.Constants.Climber;
 import frc.robot.Constants.Climber.Setpoints;
 import yams.mechanisms.positional.Arm;
@@ -20,7 +21,7 @@ public class ClimbSubsystem extends SubsystemBase
 
 
   // Vendor motor controller object
-  private SparkMax spark = new SparkMax(1, MotorType.kBrushless);
+  private SparkMax spark = new SparkMax(CANIDS.climbCANID, MotorType.kBrushless);
 
   // Create our SmartMotorController from our Spark and config with the NEO.
   private SmartMotorController sparkSmartMotorController = new SparkWrapper(spark,
