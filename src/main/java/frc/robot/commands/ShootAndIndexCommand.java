@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.Indexer;
 import frc.robot.Constants.Shooter;
 import frc.robot.Constants.Shooter.Setpoints;
-import frc.robot.subsystems.IntakeRollerSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -22,52 +21,49 @@ import java.util.function.Supplier;
 public class ShootAndIndexCommand extends Command
 {
 
-  private final IntakeRollerSubsystem intakeRollerSubsystem;
   private final IndexerSubsystem indexerSubsystem;
-  private final ShooterSubsystem      shooterSubsystem;
+  private final ShooterSubsystem shooterSubsystem;
 
-  private final Supplier<AngularVelocity> goal;
+  private final Supplier<AngularVelocity>  goal;
   private final List<Data>                 shots   = List.of(
-      new Data(Meters.of(0.5), RPM.of(3000))
+      new Data(Meters.of(0.5), RPM.of(3000)),
+      new Data(Meters.of(1), RPM.of(1000))
                                                             );
   private final InterpolatingDoubleTreeMap shotMap = InterpolatingDoubleTreeMap.ofEntries(shots.stream()
                                                                                                .map(Data::toEntry)
                                                                                                .toArray(Map.Entry[]::new));
 
-  public ShootAndIndexCommand(IntakeRollerSubsystem intakeRollerSubsystem, IndexerSubsystem indexerSubsystem,
+  public ShootAndIndexCommand(IndexerSubsystem indexerSubsystem,
                               ShooterSubsystem shooterSubsystem, Supplier<AngularVelocity> goalRPM)
   {
-    this.intakeRollerSubsystem = intakeRollerSubsystem;
     this.indexerSubsystem = indexerSubsystem;
     this.shooterSubsystem = shooterSubsystem;
     this.goal = goalRPM;
     // each subsystem used by the command must be passed into the
     // addRequirements() method (which takes a vararg of Subsystem)
-    addRequirements(this.intakeRollerSubsystem, this.indexerSubsystem, this.shooterSubsystem);
+    addRequirements(this.indexerSubsystem, this.shooterSubsystem);
   }
 
-  public ShootAndIndexCommand(IntakeRollerSubsystem intakeRollerSubsystem, IndexerSubsystem indexerSubsystem,
+  public ShootAndIndexCommand(IndexerSubsystem indexerSubsystem,
                               ShooterSubsystem shooterSubsystem, AngularVelocity goalRPM)
   {
-    this(intakeRollerSubsystem, indexerSubsystem, shooterSubsystem, () -> goalRPM);
+    this(indexerSubsystem, shooterSubsystem, () -> goalRPM);
   }
 
-  public ShootAndIndexCommand(IntakeRollerSubsystem intakeRollerSubsystem, IndexerSubsystem indexerSubsystem,
+  public ShootAndIndexCommand(IndexerSubsystem indexerSubsystem,
                               ShooterSubsystem shooterSubsystem, SwerveSubsystem swerveSubsystem)
   {
-    this.intakeRollerSubsystem = intakeRollerSubsystem;
     this.indexerSubsystem = indexerSubsystem;
     this.shooterSubsystem = shooterSubsystem;
     this.goal = () -> {return RPM.of(shotMap.get(swerveSubsystem.distanceFromHubMeters()));};
     // each subsystem used by the command must be passed into the
     // addRequirements() method (which takes a vararg of Subsystem)
-    addRequirements(this.intakeRollerSubsystem, this.indexerSubsystem, this.shooterSubsystem);
+    addRequirements(this.indexerSubsystem, this.shooterSubsystem);
   }
 
   @Override
   public void initialize()
   {
-    intakeRollerSubsystem.setDutyCycle(0);
     shooterSubsystem.setVelocity(goal.get());
   }
 
@@ -104,6 +100,5 @@ public class ShootAndIndexCommand extends Command
   {
     indexerSubsystem.setDutycycle(0);
     shooterSubsystem.setDutycycle(0);
-    intakeRollerSubsystem.setDutyCycle(0);
   }
 }

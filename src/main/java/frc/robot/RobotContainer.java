@@ -82,12 +82,11 @@ public class RobotContainer
     driverController.leftBumper().whileTrue(intake.setVelocityCommand(Intake.Setpoints.outtakeRPM));
 
     // Shooting commands
-    driverController.rightTrigger().whileTrue(new ShootAndIndexCommand(intake,
-                                                                       indexer,
+    driverController.rightTrigger().whileTrue(new ShootAndIndexCommand(indexer,
                                                                        shooter,
                                                                        Shooter.Setpoints.midRPM));
-    driverController.start().whileTrue(new ShootAndIndexCommand(intake, indexer, shooter, Shooter.Setpoints.hubRPM));
-    driverController.y().whileTrue(new ShootAndIndexCommand(intake, indexer, shooter, drivebase));
+    driverController.start().whileTrue(new ShootAndIndexCommand(indexer, shooter, Shooter.Setpoints.hubRPM));
+    driverController.y().whileTrue(new ShootAndIndexCommand(indexer, shooter, drivebase));
 
     driverController.start().and(driverController.back()).onTrue(drivebase.zeroGyroWithAllianceCommand());
     //auto aim
