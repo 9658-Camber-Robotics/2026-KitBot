@@ -6,7 +6,10 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.FeetPerSecond;
 import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Meter;
+import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Pounds;
 import static edu.wpi.first.units.Units.RPM;
 
@@ -17,6 +20,7 @@ import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -46,7 +50,7 @@ public final class Constants
   {
 
     public static final int shooterCANID = 13;
-    public static final int kickerCANID  = 14;
+    public static final int indexerCANID = 14;
     public static final int intakeCanID  = 15;
     public static final int climbCANID   = 16;
   }
@@ -54,6 +58,10 @@ public final class Constants
   public static class SwerveDrive
   {
 
+    public static double maxSpeed  = FeetPerSecond.of(14).in(MetersPerSecond);
+    public static Pose2d startPose = new Pose2d(new Translation2d(Meter.of(7.5),
+                                                                  Meter.of(7)),
+                                                Rotation2d.fromDegrees(0));
     public static class Setpoints
     {
 
@@ -119,29 +127,30 @@ public final class Constants
         .withDiameter(Inches.of(4));
   }
 
-  public static class Kicker
+  public static class Indexer
   {
 
-    public static class Setpoints
-    {
-
-      public static final AngularVelocity kickingSpeed = RPM.of(1000);
-    }
-
-    public static final DCMotor                    motor  = DCMotor.getNEO(1);
     public static final SmartMotorControllerConfig smc    = new SmartMotorControllerConfig()
         .withControlMode(ControlMode.CLOSED_LOOP)
-        .withTelemetry("KickerMotor", verbosity)
+        .withTelemetry("IndexerMotor", verbosity)
         .withIdleMode(MotorMode.COAST)
         .withMotorInverted(false)
         .withStatorCurrentLimit(Amps.of(80))
         .withGearing(1)
         .withClosedLoopController(0, 0, 0)
         .withFeedforward(new SimpleMotorFeedforward(0, 0, 0));
+
+    public static final DCMotor                    motor  = DCMotor.getNEO(1);
     public static final FlyWheelConfig             config = new FlyWheelConfig()
-        .withTelemetry("Kicker", verbosity)
+        .withTelemetry("Indexer", verbosity)
         .withMass(Pounds.of(8))
         .withDiameter(Inches.of(4));
+
+    public static class Setpoints
+    {
+
+      public static final AngularVelocity indexSpeed = RPM.of(1000);
+    }
   }
 
   public static class Shooter
@@ -175,12 +184,5 @@ public final class Constants
         .withMass(Pounds.of(2));
   }
 
-  public static class OperatorConstants
-  {
 
-    public static final int kDriverControllerPort = 0;
-  }
-
-
-  public static double maxSpeed;
 }

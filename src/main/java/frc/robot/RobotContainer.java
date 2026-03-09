@@ -16,10 +16,10 @@ import frc.robot.Constants.Intake;
 import frc.robot.Constants.Shooter;
 import frc.robot.Constants.SwerveDrive;
 import frc.robot.commands.AutoAimCommand;
-import frc.robot.commands.ShootKickAndIndexCommand;
+import frc.robot.commands.ShootAndIndexCommand;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.IntakeRollerSubsystem;
-import frc.robot.subsystems.KickerSubsystem;
+import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import swervelib.SwerveInputStream;
@@ -28,9 +28,9 @@ public class RobotContainer
 {
 
   private final ShooterSubsystem      shooter   = new ShooterSubsystem();
-  private final ClimbSubsystem        climb     = new ClimbSubsystem();
-  private final KickerSubsystem       kicker    = new KickerSubsystem();
-  private final IntakeRollerSubsystem intake    = new IntakeRollerSubsystem();
+  private final ClimbSubsystem        climb   = new ClimbSubsystem();
+  private final IndexerSubsystem      indexer = new IndexerSubsystem();
+  private final IntakeRollerSubsystem intake  = new IntakeRollerSubsystem();
   private final SwerveSubsystem       drivebase = new SwerveSubsystem();
 
   private final CommandXboxController driverController = new CommandXboxController(0);
@@ -57,7 +57,7 @@ public class RobotContainer
     drivebase.setDefaultCommand(driveFieldOrientedAngularVelocity);
     shooter.setDefaultCommand(shooter.setDutycycleCommand(0));
     climb.setDefaultCommand(climb.setDutycyleCommand(0));
-    kicker.setDefaultCommand(kicker.setDutycycleCommand(0.0));
+    indexer.setDefaultCommand(indexer.setDutycycleCommand(0.0));
     intake.setDefaultCommand(intake.setDutyCycleCommand(0.0));
 
     new EventTrigger("StartIntake").onTrue(intake.setVelocityCommand(Intake.Setpoints.intakeRPM));
@@ -82,12 +82,12 @@ public class RobotContainer
     driverController.leftBumper().whileTrue(intake.setVelocityCommand(Intake.Setpoints.outtakeRPM));
 
     // Shooting commands
-    driverController.rightTrigger().whileTrue(new ShootKickAndIndexCommand(intake,
-                                                                           kicker,
-                                                                           shooter,
-                                                                           Shooter.Setpoints.midRPM));
-    driverController.start().whileTrue(new ShootKickAndIndexCommand(intake, kicker, shooter, Shooter.Setpoints.hubRPM));
-    driverController.y().whileTrue(new ShootKickAndIndexCommand(intake, kicker, shooter, drivebase));
+    driverController.rightTrigger().whileTrue(new ShootAndIndexCommand(intake,
+                                                                       indexer,
+                                                                       shooter,
+                                                                       Shooter.Setpoints.midRPM));
+    driverController.start().whileTrue(new ShootAndIndexCommand(intake, indexer, shooter, Shooter.Setpoints.hubRPM));
+    driverController.y().whileTrue(new ShootAndIndexCommand(intake, indexer, shooter, drivebase));
 
     driverController.start().and(driverController.back()).onTrue(drivebase.zeroGyroWithAllianceCommand());
     //auto aim
