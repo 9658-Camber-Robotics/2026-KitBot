@@ -14,16 +14,14 @@ import yams.motorcontrollers.local.SparkWrapper;
 public class ShooterSubsystem extends SubsystemBase
 {
 
-  private final SparkMax motorController = new SparkMax(CANIDS.shooterCANID, MotorType.kBrushless);
-  private final SmartMotorController shooterMotorController = new SparkWrapper(motorController,
-                                                                               Shooter.motor,
-                                                                               Shooter.smc.clone().withSubsystem(this));
-  private final FlyWheel             flyWheel               = new FlyWheel(Shooter.config.clone()
-                                                                                         .withSmartMotorController(
-                                                                                             shooterMotorController));
+  private final SparkMax             motorController = new SparkMax(CANIDS.shooterCANID, MotorType.kBrushless);
+  private final SmartMotorController shooterMotorController;
+  private final FlyWheel             flyWheel;
 
   public ShooterSubsystem()
   {
+    shooterMotorController = new SparkWrapper(motorController, Shooter.motor, Shooter.smc.withSubsystem(this));
+    flyWheel = new FlyWheel(Shooter.config.withSmartMotorController(shooterMotorController));
   }
 
   public void setDutycycle(double dutycycle)
