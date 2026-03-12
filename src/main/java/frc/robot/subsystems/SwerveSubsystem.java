@@ -269,7 +269,7 @@ public class SwerveSubsystem extends SubsystemBase
 
   public Command resetOdometryCommand(Pose2d odom)
   {
-    return runOnce(() -> swerveDrive.resetOdometry(odom));
+    return runOnce(() -> swerveDrive.resetOdometry(AllianceFlipUtil.apply(odom)));
   }
 
   public Command lock()

@@ -9,6 +9,7 @@ import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.FeetPerSecond;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meter;
+import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Pounds;
 import static edu.wpi.first.units.Units.RPM;
@@ -24,7 +25,9 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
-import frc.robot.utils.FieldConstants.Depot;
+import edu.wpi.first.units.measure.Distance;
+import frc.robot.utils.FieldConstants.Hub;
+import frc.robot.utils.FieldConstants.Outpost;
 import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
 import yams.gearing.Sprocket;
@@ -45,7 +48,6 @@ import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
  */
 public final class Constants
 {
-
   public static class CANIDS
   {
 
@@ -58,15 +60,19 @@ public final class Constants
   public static class SwerveDrive
   {
 
-    public static double maxSpeed  = FeetPerSecond.of(14).in(MetersPerSecond);
-    public static Pose2d startPose = new Pose2d(new Translation2d(Meter.of(7.5),
+    public static final Distance robotWidth  = Inches.of(24);
+    public static final Distance robotLength = Inches.of(32);
+    public static final double   maxSpeed    = FeetPerSecond.of(14).in(MetersPerSecond);
+    public static final Pose2d   startPose   = new Pose2d(new Translation2d(Meter.of(7.5),
                                                                   Meter.of(7)),
                                                 Rotation2d.fromDegrees(0));
     public static class Setpoints
     {
 
-      public static Pose2d robotPoseAtDepot = new Pose2d(Depot.depotCenter.toTranslation2d(), Rotation2d.kZero)
-          .plus(new Transform2d(0, 0, Rotation2d.k180deg));
+      public static final Pose2d robotPoseAtOutpost = new Pose2d(Outpost.centerPoint, Rotation2d.kZero)
+          .plus(new Transform2d(robotLength.div(2).in(Meters), 0, Rotation2d.kZero));
+      public static final Pose2d robotPoseAtHub     = Hub.nearFace
+          .plus(new Transform2d(robotLength.div(2).in(Meters), 0, Rotation2d.kZero));
     }
   }
 
@@ -133,7 +139,7 @@ public final class Constants
     public static final SmartMotorControllerConfig smc    = new SmartMotorControllerConfig()
         .withControlMode(ControlMode.CLOSED_LOOP)
         .withTelemetry("IndexerMotor", verbosity)
-        .withIdleMode(MotorMode.COAST)
+        .withIdleMode(MotorMode.BRAKE)
         .withMotorInverted(false)
         .withStatorCurrentLimit(Amps.of(80))
         .withGearing(1)
@@ -143,8 +149,8 @@ public final class Constants
     public static final DCMotor                    motor  = DCMotor.getNEO(1);
     public static final FlyWheelConfig             config = new FlyWheelConfig()
         .withTelemetry("Indexer", verbosity)
-        .withMass(Pounds.of(8))
-        .withDiameter(Inches.of(4));
+        .withMass(Pounds.of(1))
+        .withDiameter(Inches.of(2));
 
     public static class Setpoints
     {
@@ -177,7 +183,7 @@ public final class Constants
         .withStatorCurrentLimit(Amps.of(80))
         .withGearing(1)
         .withClosedLoopController(0, 0, 0)
-        .withFeedforward(new SimpleMotorFeedforward(0, 0, 0));
+        .withFeedforward(new SimpleMotorFeedforward(0, .125, 0));
     public static final FlyWheelConfig             config                    = new FlyWheelConfig()
         .withTelemetry("Shooter", verbosity)
         .withDiameter(Inches.of(4))
