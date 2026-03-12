@@ -141,9 +141,11 @@ public final class Constants
     public static class Setpoints
     {
 
-      public static final AngularVelocity tolerance           = RPM.of(50);
-      public static final AngularVelocity hubRPM              = RPM.of(3000);
-      public static final AngularVelocity midRPM              = RPM.of(2000);
+      public static final AngularVelocity tolerance = RPM.of(50);
+      public static final AngularVelocity lowRPM    = RPM.of(3000);
+      public static final AngularVelocity midRPM    = RPM.of(2000);
+      public static final AngularVelocity high      = RPM.of(1000);
+      public static final AngularVelocity maxRPM    = RPM.of(4000);
       public static final AngularVelocity autonomousPeriodRPM = RPM.of(3000);
 
     }

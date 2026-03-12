@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANIDS;
 import frc.robot.Constants.Climber;
 import frc.robot.Constants.Climber.Setpoints;
+import java.util.function.Supplier;
 import yams.mechanisms.positional.Arm;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.local.SparkWrapper;
@@ -51,7 +52,7 @@ public class ClimbSubsystem extends SubsystemBase
     climb.simIterate();
   }
 
-  public Command setDutycyleCommand(double dutycycle)
+  public Command setDutycyleCommand(Supplier<Double> dutycycle)
   {
     return climb.set(dutycycle);
   }

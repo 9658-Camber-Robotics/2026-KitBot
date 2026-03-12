@@ -9,10 +9,11 @@ import static edu.wpi.first.units.Units.Seconds;
 
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
-import frc.robot.Constants.Climber.Setpoints;
 import frc.robot.Constants.Shooter;
+import frc.robot.Constants.Shooter.Setpoints;
 import frc.robot.Constants.SwerveDrive;
 import frc.robot.commands.AutoAimCommand;
 import frc.robot.commands.IntakeCommand;
@@ -27,12 +28,13 @@ import swervelib.SwerveInputStream;
 public class RobotContainer
 {
 
-  private final ShooterSubsystem      shooter   = new ShooterSubsystem();
-  private final ClimbSubsystem        climb   = new ClimbSubsystem();
-  private final IndexerSubsystem      indexer = new IndexerSubsystem();
-  private final SwerveSubsystem       drivebase = new SwerveSubsystem();
+  private final ShooterSubsystem shooter   = new ShooterSubsystem();
+  private final ClimbSubsystem   climb     = new ClimbSubsystem();
+  private final IndexerSubsystem indexer   = new IndexerSubsystem();
+  private final SwerveSubsystem  drivebase = new SwerveSubsystem();
 
-  private final CommandPS5Controller driverController = new CommandPS5Controller(0);
+  private final CommandPS5Controller driverController   = new CommandPS5Controller(0);
+  private final CommandPS5Controller operatorController = new CommandPS5Controller(1);
 
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
                                                                 () -> driverController.getLeftY() * -1,
@@ -54,8 +56,10 @@ public class RobotContainer
   public RobotContainer()
   {
     drivebase.setDefaultCommand(driveFieldOrientedAngularVelocity);
-    shooter.setDefaultCommand(shooter.setDutycycleCommand(0));
-    climb.setDefaultCommand(climb.setDutycyleCommand(0));
+    shooter.setDefaultCommand(shooter.setVelocityCommand(() -> Setpoints.maxRPM.times(MathUtil.clamp(operatorController.getRightY(),
+                                                                                                     0,
+                                                                                                     1))));
+    climb.setDefaultCommand(climb.setDutycyleCommand(operatorController::getLeftY));
     indexer.setDefaultCommand(indexer.setDutycycleCommand(0));
 
     new EventTrigger("StartIntake").onTrue(new IntakeCommand(indexer, shooter));
@@ -69,31 +73,30 @@ public class RobotContainer
 
   private void configureBindings()
   {
+    // Shooting commands
+    operatorController.triangle().whileTrue(new ShootAndIndexCommand(indexer, shooter, Setpoints.lowRPM));
+    operatorController.circle().whileTrue(new ShootAndIndexCommand(indexer, shooter, Setpoints.midRPM));
+    operatorController.cross().whileTrue(new ShootAndIndexCommand(indexer, shooter, Setpoints.high));
+    operatorController.square().whileTrue(new ShootAndIndexCommand(indexer, shooter, Setpoints.maxRPM));
+    operatorController.L2().whileTrue(new AutoAimCommand(drivebase, driveAngularVelocity, 0.4));
 
-    // TODO: Tune later
-    driverController.triangle().whileTrue(climb.setAngleCommand(Setpoints.climbSetpoint));
-    driverController.square().whileTrue(climb.setAngleCommand(Setpoints.releaseSetpoint));
-    // Prevents Swerve Drive from moving by making an X
-    driverController.touchpad().whileTrue(drivebase.lock());
+    // auto-aim
+    operatorController.R2().whileTrue(new ShootAndIndexCommand(indexer, shooter, drivebase));
 
     // Intake and outtake controls.
     // TODO: Tune later
-    driverController.R1().whileTrue(new IntakeCommand(indexer, shooter));
-    driverController.L1().whileTrue(new OuttakeCommand(indexer, shooter));
+    operatorController.R1().whileTrue(new IntakeCommand(indexer, shooter));
+    operatorController.L1().whileTrue(new OuttakeCommand(indexer, shooter));
 
     // Shooting commands
-    /*driverController.R2().whileTrue(new ShootAndIndexCommand(indexer,
-                                                                       shooter,
-                                                                       Shooter.Setpoints.midRPM));
-    driverController.start().whileTrue(new ShootAndIndexCommand(indexer, shooter, Shooter.Setpoints.hubRPM));*/
-    driverController.R2().whileTrue(new ShootAndIndexCommand(indexer, shooter, drivebase));
 
-    driverController.cross().and(driverController.create()).onTrue(drivebase.zeroGyroWithAllianceCommand());
-    //auto aim
+    // Prevents Swerve Drive from moving by making an X
+    driverController.touchpad().whileTrue(drivebase.lock());
+    driverController.create().and(driverController.touchpad()).onTrue(drivebase.zeroGyroWithAllianceCommand());
+    // Reset odom on field to known points.
     driverController.povUp().onTrue(drivebase.resetOdometryCommand(SwerveDrive.Setpoints.robotPoseAtOutpost));
     driverController.povDown().onTrue(drivebase.resetOdometryCommand(SwerveDrive.Setpoints.robotPoseAtHub));
 
-    driverController.L2().whileTrue(new AutoAimCommand(drivebase, driveAngularVelocity, 0.4));
 
   }
 

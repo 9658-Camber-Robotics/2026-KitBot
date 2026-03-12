@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANIDS;
 import frc.robot.Constants.Shooter;
+import java.util.function.Supplier;
 import yams.mechanisms.velocity.FlyWheel;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.local.SparkWrapper;
@@ -57,6 +58,11 @@ public class ShooterSubsystem extends SubsystemBase
   }
 
   public Command setVelocityCommand(AngularVelocity velocity)
+  {
+    return flyWheel.run(velocity);
+  }
+
+  public Command setVelocityCommand(Supplier<AngularVelocity> velocity)
   {
     return flyWheel.run(velocity);
   }
