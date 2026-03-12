@@ -97,7 +97,7 @@ public final class Constants
         .withIdleMode(MotorMode.BRAKE)
         .withMotorInverted(false)
         .withStatorCurrentLimit(Amps.of(60))
-        .withGearing(new MechanismGearing(GearBox.fromReductionStages(80), Sprocket.fromStages("16:48")))
+        .withGearing(new MechanismGearing(GearBox.fromTeeth(20,10,28)))
         .withClosedLoopController(0, 0, 0)
         .withFeedforward(new ArmFeedforward(0, 0, 0));
 
@@ -118,7 +118,7 @@ public final class Constants
         .withIdleMode(MotorMode.BRAKE)
         .withMotorInverted(false)
         .withStatorCurrentLimit(Amps.of(80))
-        .withGearing(1)
+        .withGearing(new MechanismGearing(GearBox.fromTeeth(12,80,36)))
         .withClosedLoopController(0, 0, 0)
         .withFeedforward(new SimpleMotorFeedforward(0, 10, 0));
 
@@ -159,7 +159,7 @@ public final class Constants
         .withIdleMode(MotorMode.COAST)
         .withMotorInverted(false)
         .withStatorCurrentLimit(Amps.of(80))
-        .withGearing(1)
+        .withGearing(new MechanismGearing(GearBox.fromTeeth(40,60,60)))
         .withClosedLoopController(0, 0, 0)
         .withFeedforward(new SimpleMotorFeedforward(0, 0.125, 0));
     public static final FlyWheelConfig             config                    = new FlyWheelConfig()
