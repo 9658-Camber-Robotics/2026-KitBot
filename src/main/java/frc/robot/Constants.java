@@ -52,9 +52,9 @@ public final class Constants
   public static class CANIDS
   {
 
-    public static final int shooterCANID = 9;
-    public static final int indexerCANID = 4;
-    public static final int climbCANID   = 3;
+    public static final int shooterCANID = 4;
+    public static final int indexerCANID = 3;
+    public static final int climbCANID   = 9;
     public static final int climbCANID2  = 0; // Ruh roh
   }
 
