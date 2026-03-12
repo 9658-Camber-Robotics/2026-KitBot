@@ -70,6 +70,7 @@ public class RobotContainer
   private void configureBindings()
   {
 
+    // TODO: Tune later
     driverController.triangle().whileTrue(climb.setAngleCommand(Setpoints.climbSetpoint));
     driverController.square().whileTrue(climb.setAngleCommand(Setpoints.releaseSetpoint));
     // Prevents Swerve Drive from moving by making an X
