@@ -107,32 +107,6 @@ public final class Constants
         .withMass(Pounds.of(8));
   }
 
-  public static class Intake
-  {
-
-    public static class Setpoints
-    {
-
-      public static final AngularVelocity intakeRPM  = RPM.of(-3000);
-      public static final AngularVelocity outtakeRPM = RPM.of(2000);
-    }
-
-    public static final DCMotor                    motor  = DCMotor.getNEO(1);
-    public static final SmartMotorControllerConfig smc    = new SmartMotorControllerConfig()
-        .withControlMode(ControlMode.CLOSED_LOOP)
-        .withTelemetry("IntakeMotor", verbosity)
-        .withIdleMode(MotorMode.COAST)
-        .withMotorInverted(false)
-        .withStatorCurrentLimit(Amps.of(40))
-        .withGearing(1)
-        .withClosedLoopController(0, 0, 0)
-        .withFeedforward(new SimpleMotorFeedforward(0, 0, 0));
-    public static final FlyWheelConfig             config = new FlyWheelConfig()
-        .withTelemetry("Intake", verbosity)
-        .withMass(Pounds.of(8))
-        .withDiameter(Inches.of(4));
-  }
-
   public static class Indexer
   {
 
