@@ -7,13 +7,8 @@
     "angle": 20
   },
   "conversionFactors": {
-    "angle": {
-      "gearRatio": 18.75
-    },
-    "drive": {
-      "gearRatio": 7.13,
-      "diameter": 4
-    }
+    "angle": {"gearRatio": 18.75},
+    "drive": {"gearRatio": 5.36, "diameter": 4}
   },
   "rampRate": {
     "drive": 0.25,

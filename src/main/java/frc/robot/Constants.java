@@ -120,7 +120,7 @@ public final class Constants
         .withStatorCurrentLimit(Amps.of(80))
         .withGearing(1)
         .withClosedLoopController(0, 0, 0)
-        .withFeedforward(new SimpleMotorFeedforward(0, 0, 0));
+        .withFeedforward(new SimpleMotorFeedforward(0, 10, 0));
 
     public static final DCMotor        motor  = DCMotor.getNEO(1);
     public static final FlyWheelConfig config = new FlyWheelConfig()
@@ -161,7 +161,7 @@ public final class Constants
         .withStatorCurrentLimit(Amps.of(80))
         .withGearing(1)
         .withClosedLoopController(0, 0, 0)
-        .withFeedforward(new SimpleMotorFeedforward(0, .125, 0));
+        .withFeedforward(new SimpleMotorFeedforward(0, 0.125, 0));
     public static final FlyWheelConfig             config                    = new FlyWheelConfig()
         .withTelemetry("Shooter", verbosity)
         .withDiameter(Inches.of(4))
