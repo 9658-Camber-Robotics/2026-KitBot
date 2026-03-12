@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import static edu.wpi.first.units.Units.Seconds;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -31,6 +33,7 @@ public class AutoAimCommand extends Command
     swerveInputStream.aim(AllianceFlipUtil.apply(new Pose2d(Hub.topCenterPoint.toTranslation2d(), Rotation2d.kZero)))
                      .aimHeadingOffset(Rotation2d.k180deg)
                      .aimHeadingOffset(true)
+                     .aimLookahead(Seconds.of(0.1))
                      .aimWhile(true);
 
   }
