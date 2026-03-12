@@ -48,13 +48,14 @@ import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
  */
 public final class Constants
 {
+
   public static class CANIDS
   {
 
-    public static final int shooterCANID = 13;
-    public static final int indexerCANID = 14;
-    public static final int intakeCanID  = 15;
-    public static final int climbCANID   = 16;
+    public static final int shooterCANID = 8;
+    public static final int indexerCANID = 3;
+    public static final int climbCANID   = 7;
+    public static final int climbCANID2  = 0; // Ruh roh
   }
 
   public static class SwerveDrive
@@ -64,8 +65,9 @@ public final class Constants
     public static final Distance robotLength = Inches.of(32);
     public static final double   maxSpeed    = FeetPerSecond.of(14).in(MetersPerSecond);
     public static final Pose2d   startPose   = new Pose2d(new Translation2d(Meter.of(7.5),
-                                                                  Meter.of(7)),
-                                                Rotation2d.fromDegrees(0));
+                                                                            Meter.of(7)),
+                                                          Rotation2d.fromDegrees(0));
+
     public static class Setpoints
     {
 
@@ -110,7 +112,7 @@ public final class Constants
   public static class Indexer
   {
 
-    public static final SmartMotorControllerConfig smc    = new SmartMotorControllerConfig()
+    public static final SmartMotorControllerConfig smc = new SmartMotorControllerConfig()
         .withControlMode(ControlMode.CLOSED_LOOP)
         .withTelemetry("IndexerMotor", verbosity)
         .withIdleMode(MotorMode.BRAKE)
@@ -120,8 +122,8 @@ public final class Constants
         .withClosedLoopController(0, 0, 0)
         .withFeedforward(new SimpleMotorFeedforward(0, 0, 0));
 
-    public static final DCMotor                    motor  = DCMotor.getNEO(1);
-    public static final FlyWheelConfig             config = new FlyWheelConfig()
+    public static final DCMotor        motor  = DCMotor.getNEO(1);
+    public static final FlyWheelConfig config = new FlyWheelConfig()
         .withTelemetry("Indexer", verbosity)
         .withMass(Pounds.of(1))
         .withDiameter(Inches.of(2));
