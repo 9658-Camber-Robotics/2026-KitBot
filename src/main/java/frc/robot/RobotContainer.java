@@ -5,6 +5,7 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Seconds;
 
 import com.pathplanner.lib.auto.NamedCommands;
@@ -37,16 +38,20 @@ public class RobotContainer
 
   private final CommandXboxController driverController   = new CommandXboxController(0);
   private final CommandXboxController operatorController = new CommandXboxController(1);
-
+  private final CommandXboxController testController = new CommandXboxController(2);
+  
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
                                                                 () -> driverController.getLeftY() * -1,
 
                                                                 () -> driverController.getLeftX() * -1) // set to 0
                                                             .withControllerRotationAxis(() ->
                                                                                             driverController.getRightX() *
-                                                                                            -1)
+                                                                                            1)
                                                             .deadband(.1)
-                                                            .scaleTranslation(.4)
+
+                                                             
+                                                            .scaleTranslation(.8)
+
                                                             .allianceRelativeControl(true);
 
 
@@ -58,7 +63,7 @@ public class RobotContainer
   public RobotContainer()
   {
     drivebase.setDefaultCommand(driveFieldOrientedAngularVelocity);
-    shooter.setDefaultCommand(shooter.setVelocityCommand(() -> Setpoints.maxRPM.times(MathUtil.clamp(operatorController.getRightY(),
+    shooter.setDefaultCommand(shooter.setVelocityCommand(() -> Setpoints.maxRPM.times(MathUtil.clamp(MathUtil.applyDeadband(-operatorController.getRightY(),0.1 ),
                                                                                                      0,
                                                                                                      1))));
     climb.setDefaultCommand(climb.setDutycyleCommand(operatorController::getLeftY));
@@ -81,11 +86,23 @@ public class RobotContainer
     operatorController.x().whileTrue(new ShootAndIndexCommand(indexer, shooter, Setpoints.high));
     operatorController.y().whileTrue(new ShootAndIndexCommand(indexer, shooter, Setpoints.maxRPM));
     operatorController.rightTrigger(0.3).whileTrue(new ShootAndIndexCommand(indexer, shooter, drivebase));
-    operatorController.povUp().whileTrue(indexer.setDutycycleCommand(0.8));
+    operatorController.povUp().whileTrue(indexer.setDutycycleCommand(-0.8));
+    operatorController.povDown().whileTrue(indexer.setDutycycleCommand(0.8));
+    operatorController.povLeft().whileTrue(shooter.setDutycycleCommand(-0.8));
+    operatorController.povRight().whileTrue(shooter.setDutycycleCommand(0.8));
+
+
     // auto-aim
     operatorController.leftTrigger(0.3).whileTrue(new AutoAimCommand(drivebase, driveAngularVelocity, 0.4));
-
-
+    
+    testController.x().whileTrue(new ShootAndIndexCommand(indexer, shooter, RPM.of(3600)));
+    testController.y().whileTrue(new ShootAndIndexCommand(indexer, shooter, RPM.of(3700)));
+    testController.b().whileTrue(new ShootAndIndexCommand(indexer, shooter, RPM.of(3800)));    
+    testController.a().whileTrue(new ShootAndIndexCommand(indexer, shooter, RPM.of(3900)));
+    testController.rightBumper().whileTrue(new ShootAndIndexCommand(indexer, shooter, RPM.of(4000)));
+    testController.leftBumper().whileTrue(new ShootAndIndexCommand(indexer, shooter, RPM.of(4100)));
+    testController.rightTrigger().whileTrue(new ShootAndIndexCommand(indexer, shooter, drivebase)); //based on distance from hub
+    
     // Intake and outtake controls.
     // TODO: Tune later
     operatorController.rightBumper().whileTrue(new IntakeCommand(indexer, shooter));
@@ -106,6 +123,6 @@ public class RobotContainer
 
   public Command getAutonomousCommand()
   {
-    return Commands.none();//drivebase.getAutonomousCommand("Auto1");
+    return Commands.none();//drivebase.getAutonomousCommand("SimpleAuto");
   }
 }

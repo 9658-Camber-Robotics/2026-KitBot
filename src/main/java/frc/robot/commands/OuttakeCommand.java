@@ -29,8 +29,8 @@ public class OuttakeCommand extends Command
   @Override
   public void execute()
   {
-    shooterSubsystem.setDutycycle(-0.5);
-    indexerSubsystem.setDutycycle(0.5);
+    shooterSubsystem.setDutycycle(-0.8);
+    indexerSubsystem.setDutycycle(-0.5);
   }
 
   @Override

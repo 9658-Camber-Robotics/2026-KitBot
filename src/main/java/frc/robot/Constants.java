@@ -63,10 +63,15 @@ public final class Constants
 
     public static final Distance robotWidth  = Inches.of(24);
     public static final Distance robotLength = Inches.of(32);
-    public static final double   maxSpeed    = FeetPerSecond.of(14).in(MetersPerSecond);
-    public static final Pose2d   startPose   = new Pose2d(new Translation2d(Meter.of(7.5),
-                                                                            Meter.of(7)),
-                                                          Rotation2d.fromDegrees(0));
+    public static final double   maxSpeed    = 4.5;
+    public static final Pose2d   startPose   = new Pose2d(new Translation2d(Meter.of(13),
+                                                                            Meter.of(4)),
+
+                                                                          // red 13x 4y
+                                                                          // blue 4x, 4y
+                                                          Rotation2d.fromDegrees(180));
+                                                          //red 180 
+                                                          //blue 0
 
     public static class Setpoints
     {
@@ -142,10 +147,10 @@ public final class Constants
     {
 
       public static final AngularVelocity tolerance = RPM.of(50);
-      public static final AngularVelocity lowRPM    = RPM.of(3000);
-      public static final AngularVelocity midRPM    = RPM.of(4000);
-      public static final AngularVelocity high      = RPM.of(6000);
-      public static final AngularVelocity maxRPM    = RPM.of(6000);
+      public static final AngularVelocity lowRPM    = RPM.of(3600); // make this higher probably
+      public static final AngularVelocity midRPM    = RPM.of(3700);
+      public static final AngularVelocity high      = RPM.of(3800);
+      public static final AngularVelocity maxRPM    = RPM.of(4700);
       public static final AngularVelocity autonomousPeriodRPM = RPM.of(3000);
 
     }
@@ -161,7 +166,7 @@ public final class Constants
         .withStatorCurrentLimit(Amps.of(80))
         .withGearing(new MechanismGearing(GearBox.fromTeeth(40,60,60)))
         .withClosedLoopController(0, 0, 0)
-        .withFeedforward(new SimpleMotorFeedforward(.2, 0.1885, 0));
+        .withFeedforward(new SimpleMotorFeedforward(.2, 0.189, 0));
     public static final FlyWheelConfig             config                    = new FlyWheelConfig()
         .withTelemetry("Shooter", verbosity)
         .withDiameter(Inches.of(4))
