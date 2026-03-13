@@ -46,7 +46,7 @@ public class RobotContainer
                                                                                             driverController.getRightX() *
                                                                                             -1)
                                                             .deadband(.1)
-                                                            .scaleTranslation(.8)
+                                                            .scaleTranslation(.4)
                                                             .allianceRelativeControl(true);
 
 
