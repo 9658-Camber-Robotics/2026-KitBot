@@ -11,6 +11,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.Shooter;
@@ -80,7 +81,7 @@ public class RobotContainer
     operatorController.x().whileTrue(new ShootAndIndexCommand(indexer, shooter, Setpoints.high));
     operatorController.y().whileTrue(new ShootAndIndexCommand(indexer, shooter, Setpoints.maxRPM));
     operatorController.rightTrigger(0.3).whileTrue(new ShootAndIndexCommand(indexer, shooter, drivebase));
-
+    operatorController.povUp().whileTrue(indexer.setDutycycleCommand(0.8));
     // auto-aim
     operatorController.leftTrigger(0.3).whileTrue(new AutoAimCommand(drivebase, driveAngularVelocity, 0.4));
 
@@ -105,6 +106,6 @@ public class RobotContainer
 
   public Command getAutonomousCommand()
   {
-    return drivebase.getAutonomousCommand("Basic");
+    return Commands.none();//drivebase.getAutonomousCommand("Auto1");
   }
 }

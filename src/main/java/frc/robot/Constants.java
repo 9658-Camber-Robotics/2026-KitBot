@@ -143,9 +143,9 @@ public final class Constants
 
       public static final AngularVelocity tolerance = RPM.of(50);
       public static final AngularVelocity lowRPM    = RPM.of(3000);
-      public static final AngularVelocity midRPM    = RPM.of(2000);
-      public static final AngularVelocity high      = RPM.of(1000);
-      public static final AngularVelocity maxRPM    = RPM.of(4000);
+      public static final AngularVelocity midRPM    = RPM.of(4000);
+      public static final AngularVelocity high      = RPM.of(6000);
+      public static final AngularVelocity maxRPM    = RPM.of(6000);
       public static final AngularVelocity autonomousPeriodRPM = RPM.of(3000);
 
     }
@@ -157,11 +157,11 @@ public final class Constants
         .withControlMode(ControlMode.CLOSED_LOOP)
         .withTelemetry("ShooterMotor", verbosity)
         .withIdleMode(MotorMode.COAST)
-        .withMotorInverted(false)
+        .withMotorInverted(true)
         .withStatorCurrentLimit(Amps.of(80))
         .withGearing(new MechanismGearing(GearBox.fromTeeth(40,60,60)))
         .withClosedLoopController(0, 0, 0)
-        .withFeedforward(new SimpleMotorFeedforward(0, 0.125, 0));
+        .withFeedforward(new SimpleMotorFeedforward(.2, 0.1885, 0));
     public static final FlyWheelConfig             config                    = new FlyWheelConfig()
         .withTelemetry("Shooter", verbosity)
         .withDiameter(Inches.of(4))

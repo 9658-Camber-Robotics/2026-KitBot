@@ -89,10 +89,10 @@ public class ShootAndIndexCommand extends Command
   {
     shooterSubsystem.setVelocity(goal.get());
     if (Shooter.flyWheelRecoveryDebouncer.calculate(shooterSubsystem.getVelocity()
-                                                                    .isNear(goal.get(), RPM.of(5))))
+                                                                    .isNear(goal.get(), RPM.of(100))))
     {
 //      indexerSubsystem.setVelocity(Indexer.Setpoints.indexSpeed);
-      indexerSubsystem.setDutycycle(0.3);
+      indexerSubsystem.setDutycycle(-0.3);
 
 
     } else

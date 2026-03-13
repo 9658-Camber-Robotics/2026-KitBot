@@ -68,7 +68,7 @@ public class SwerveSubsystem extends SubsystemBase
   @Override
   public void periodic()
   {
-    SmartDashboard.putNumber("HubDistance(Meters)", distanceFromHubMeters());
+    // SmartDashboard.putNumber("HubDistance(Meters)", distanceFromHubMeters());
     // This method will be called once per scheduler run
   }
 
