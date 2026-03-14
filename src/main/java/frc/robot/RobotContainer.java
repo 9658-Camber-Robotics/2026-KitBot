@@ -123,6 +123,7 @@ public class RobotContainer
 
   public Command getAutonomousCommand()
   {
-    return Commands.none();//drivebase.getAutonomousCommand("SimpleAuto");
+
+      return drivebase.getAutonomousCommand("SimpleAuto");
   }
 }
