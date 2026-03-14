@@ -58,12 +58,12 @@ public final class Constants
     public static final int climbCANID2  = 0; // Ruh roh
   }
 
-  public static class SwerveDrive
+  public static class SwerveDrive 
   {
 
     public static final Distance robotWidth  = Inches.of(24);
     public static final Distance robotLength = Inches.of(32);
-    public static final double   maxSpeed    = 4.5;
+    public static final double   maxSpeed    = 4.7;
     public static final Pose2d   startPose   = new Pose2d(new Translation2d(Meter.of(13),
                                                                             Meter.of(4)),
 
@@ -147,10 +147,10 @@ public final class Constants
     {
 
       public static final AngularVelocity tolerance = RPM.of(50);
-      public static final AngularVelocity lowRPM    = RPM.of(3600); // make this higher probably
-      public static final AngularVelocity midRPM    = RPM.of(3700);
-      public static final AngularVelocity high      = RPM.of(3800);
-      public static final AngularVelocity maxRPM    = RPM.of(4700);
+      public static final AngularVelocity lowRPM    = RPM.of(4900); // make this higher probably
+      public static final AngularVelocity midRPM    = RPM.of(5300); // high enough
+      public static final AngularVelocity high      = RPM.of(5600); // max according to documentation
+      public static final AngularVelocity maxRPM    = RPM.of(5600); // max acoording to documentation
       public static final AngularVelocity autonomousPeriodRPM = RPM.of(3000);
 
     }
