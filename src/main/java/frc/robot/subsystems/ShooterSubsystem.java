@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkMax;
+import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -10,18 +9,18 @@ import frc.robot.Constants.Shooter;
 import java.util.function.Supplier;
 import yams.mechanisms.velocity.FlyWheel;
 import yams.motorcontrollers.SmartMotorController;
-import yams.motorcontrollers.local.SparkWrapper;
+import yams.motorcontrollers.remote.TalonFXWrapper;
 
 public class ShooterSubsystem extends SubsystemBase
 {
 
-  private final SparkMax             motorController = new SparkMax(CANIDS.shooterCANID, MotorType.kBrushless);
+  private final TalonFX             motorController = new TalonFX(CANIDS.shooterCANID);
   private final SmartMotorController shooterMotorController;
   private final FlyWheel             flyWheel;
 
   public ShooterSubsystem()
   {
-    shooterMotorController = new SparkWrapper(motorController, Shooter.motor, Shooter.smc.withSubsystem(this));
+    shooterMotorController = new TalonFXWrapper(motorController, Shooter.motor, Shooter.smc.withSubsystem(this));
     flyWheel = new FlyWheel(Shooter.config.withSmartMotorController(shooterMotorController));
   }
 
