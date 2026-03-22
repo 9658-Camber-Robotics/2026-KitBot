@@ -95,12 +95,12 @@ public class RobotContainer
     // auto-aim
     driverController.leftTrigger(0.3).whileTrue(new AutoAimCommand(drivebase, driveAngularVelocity, 0.4));
     
-    testController.x().whileTrue(new ShootAndIndexCommand(indexer, shooter, RPM.of(2750))); 
-    testController.y().whileTrue(new ShootAndIndexCommand(indexer, shooter, RPM.of(3000)));
-    testController.b().whileTrue(new ShootAndIndexCommand(indexer, shooter, RPM.of(3250)));    
-    testController.a().whileTrue(new ShootAndIndexCommand(indexer, shooter, RPM.of(3500)));
-    testController.rightBumper().whileTrue(new ShootAndIndexCommand(indexer, shooter, RPM.of(3750)));
-    testController.leftBumper().whileTrue(new ShootAndIndexCommand(indexer, shooter, RPM.of(4000)));
+    testController.x().whileTrue(new ShootAndIndexCommand(indexer, shooter, RPM.of(3000))); 
+    testController.y().whileTrue(new ShootAndIndexCommand(indexer, shooter, RPM.of(4050)));
+    testController.b().whileTrue(new ShootAndIndexCommand(indexer, shooter, RPM.of(4000)));    
+    testController.a().whileTrue(new ShootAndIndexCommand(indexer, shooter, RPM.of(3600)));
+    testController.rightBumper().whileTrue(new ShootAndIndexCommand(indexer, shooter, RPM.of(4100)));
+    testController.leftBumper().whileTrue(new ShootAndIndexCommand(indexer, shooter, RPM.of(4200)));
     testController.rightTrigger().whileTrue(new ShootAndIndexCommand(indexer, shooter, drivebase)); //based on distance from hub
     
     // Intake and outtake controls.
