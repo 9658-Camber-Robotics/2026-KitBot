@@ -22,7 +22,7 @@ import frc.robot.commands.AutoAimCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.OuttakeCommand;
 import frc.robot.commands.ShootAndIndexCommand;
-import frc.robot.subsystems.ClimbSubsystem;
+//import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -32,7 +32,7 @@ public class RobotContainer
 {
 
   private final ShooterSubsystem shooter   = new ShooterSubsystem();
-  private final ClimbSubsystem   climb     = new ClimbSubsystem();
+  //private final ClimbSubsystem   climb     = new ClimbSubsystem();
   private final IndexerSubsystem indexer   = new IndexerSubsystem();
   private final SwerveSubsystem  drivebase = new SwerveSubsystem();
 
@@ -66,7 +66,7 @@ public class RobotContainer
     shooter.setDefaultCommand(shooter.setVelocityCommand(() -> Setpoints.maxRPM.times(MathUtil.clamp(MathUtil.applyDeadband(-operatorController.getRightY(),0.1 ),
                                                                                                      0,
                                                                                                      1))));
-    climb.setDefaultCommand(climb.setDutycyleCommand(operatorController::getLeftY));
+    //climb.setDefaultCommand(climb.setDutycyleCommand(operatorController::getLeftY));
     indexer.setDefaultCommand(indexer.setDutycycleCommand(0));
 
     new EventTrigger("StartIntake").onTrue(new IntakeCommand(indexer, shooter));
@@ -93,14 +93,14 @@ public class RobotContainer
 
 
     // auto-aim
-    operatorController.leftTrigger(0.3).whileTrue(new AutoAimCommand(drivebase, driveAngularVelocity, 0.4));
+    driverController.leftTrigger(0.3).whileTrue(new AutoAimCommand(drivebase, driveAngularVelocity, 0.4));
     
-    testController.x().whileTrue(new ShootAndIndexCommand(indexer, shooter, RPM.of(3600)));
-    testController.y().whileTrue(new ShootAndIndexCommand(indexer, shooter, RPM.of(3700)));
-    testController.b().whileTrue(new ShootAndIndexCommand(indexer, shooter, RPM.of(3800)));    
-    testController.a().whileTrue(new ShootAndIndexCommand(indexer, shooter, RPM.of(3900)));
-    testController.rightBumper().whileTrue(new ShootAndIndexCommand(indexer, shooter, RPM.of(4000)));
-    testController.leftBumper().whileTrue(new ShootAndIndexCommand(indexer, shooter, RPM.of(4100)));
+    testController.x().whileTrue(new ShootAndIndexCommand(indexer, shooter, RPM.of(3000))); 
+    testController.y().whileTrue(new ShootAndIndexCommand(indexer, shooter, RPM.of(4050)));
+    testController.b().whileTrue(new ShootAndIndexCommand(indexer, shooter, RPM.of(4000)));    
+    testController.a().whileTrue(new ShootAndIndexCommand(indexer, shooter, RPM.of(3600)));
+    testController.rightBumper().whileTrue(new ShootAndIndexCommand(indexer, shooter, RPM.of(4100)));
+    testController.leftBumper().whileTrue(new ShootAndIndexCommand(indexer, shooter, RPM.of(4200)));
     testController.rightTrigger().whileTrue(new ShootAndIndexCommand(indexer, shooter, drivebase)); //based on distance from hub
     
     // Intake and outtake controls.
@@ -123,7 +123,6 @@ public class RobotContainer
 
   public Command getAutonomousCommand()
   {
-
-      return Commands.none(); // drivebase.getAutonomousCommand("SimpleAuto");
+    return Commands.none(); // drivebase.getAutonomousCommand("SimpleAuto");
   }
 }

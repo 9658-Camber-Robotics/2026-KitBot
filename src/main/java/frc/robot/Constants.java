@@ -14,6 +14,9 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Pounds;
 import static edu.wpi.first.units.Units.RPM;
 
+import com.ctre.phoenix6.hardware.TalonFX;
+
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.filter.Debouncer;
@@ -53,23 +56,24 @@ public final class Constants
   {
 
     public static final int shooterCANID = 4;
+    public static final int shooterCANIDtwo = 41;
     public static final int indexerCANID = 3;
     public static final int climbCANID   = 9;
     public static final int climbCANID2  = 0; // Ruh roh
   }
 
-  public static class SwerveDrive
+  public static class SwerveDrive 
   {
 
     public static final Distance robotWidth  = Inches.of(24);
     public static final Distance robotLength = Inches.of(32);
-    public static final double   maxSpeed    = 4.5;
-    public static final Pose2d   startPose   = new Pose2d(new Translation2d(Meter.of(13),
+    public static final double   maxSpeed    = 4.7;
+    public static final Pose2d   startPose   = new Pose2d(new Translation2d(Meter.of(3.5),
                                                                             Meter.of(4)),
 
                                                                           // red 13x 4y
                                                                           // blue 4x, 4y
-                                                          Rotation2d.fromDegrees(180));
+                                                          Rotation2d.fromDegrees(0));
                                                           //red 180 
                                                           //blue 0
 
@@ -95,7 +99,7 @@ public final class Constants
       public static final Angle releaseSetpoint = Degrees.of(45);
     }
 
-    public static final DCMotor                    motor = DCMotor.getNEO(2);
+    public static final DCMotor                    motor = DCMotor.getKrakenX60(2);
     public static final SmartMotorControllerConfig smc   = new SmartMotorControllerConfig()
         .withControlMode(ControlMode.CLOSED_LOOP)
         .withTelemetry("ClimberMotor", verbosity)
@@ -104,7 +108,8 @@ public final class Constants
         .withStatorCurrentLimit(Amps.of(60))
         .withGearing(new MechanismGearing(GearBox.fromTeeth(20,10,28)))
         .withClosedLoopController(0, 0, 0)
-        .withFeedforward(new ArmFeedforward(0, 0, 0));
+        .withFeedforward(new ArmFeedforward(0, 0, 0))
+        .withFollowers(Pair.of(new TalonFX(CANIDS.shooterCANIDtwo),false));
 
     public static final ArmConfig config = new ArmConfig()
         .withTelemetry("Climber", verbosity)
@@ -146,27 +151,28 @@ public final class Constants
     public static class Setpoints
     {
 
-      public static final AngularVelocity tolerance = RPM.of(50);
-      public static final AngularVelocity lowRPM    = RPM.of(3600); // make this higher probably
-      public static final AngularVelocity midRPM    = RPM.of(3700);
-      public static final AngularVelocity high      = RPM.of(3800);
-      public static final AngularVelocity maxRPM    = RPM.of(4700);
+      public static final AngularVelocity tolerance = RPM.of(60);
+      public static final AngularVelocity lowRPM    = RPM.of(4900); // make this higher probably
+      public static final AngularVelocity midRPM    = RPM.of(5300); // high enough
+      public static final AngularVelocity high      = RPM.of(5600); // max according to documentation
+      public static final AngularVelocity maxRPM    = RPM.of(5600); // max acoording to documentation
       public static final AngularVelocity autonomousPeriodRPM = RPM.of(3000);
 
     }
 
     public static final Debouncer                  flyWheelRecoveryDebouncer = new Debouncer(0.25,
                                                                                              DebounceType.kFalling);
-    public static final DCMotor                    motor                     = DCMotor.getNEO(1);
+    public static final DCMotor                    motor                     = DCMotor.getKrakenX60(2);
     public static final SmartMotorControllerConfig smc                       = new SmartMotorControllerConfig()
         .withControlMode(ControlMode.CLOSED_LOOP)
         .withTelemetry("ShooterMotor", verbosity)
         .withIdleMode(MotorMode.COAST)
-        .withMotorInverted(true)
+        .withMotorInverted(false) 
+        .withFollowers(Pair.of(new TalonFX(41), true ) )
         .withStatorCurrentLimit(Amps.of(80))
         .withGearing(new MechanismGearing(GearBox.fromTeeth(40,60,60)))
         .withClosedLoopController(0, 0, 0)
-        .withFeedforward(new SimpleMotorFeedforward(.2, 0.189, 0));
+        .withFeedforward(new SimpleMotorFeedforward(.15, 0.17, 1));
     public static final FlyWheelConfig             config                    = new FlyWheelConfig()
         .withTelemetry("Shooter", verbosity)
         .withDiameter(Inches.of(4))
