@@ -83,9 +83,9 @@ public class SwerveSubsystem extends SubsystemBase {
                 .withCameraOffset(
                         new Pose3d(
                                 Units.inchesToMeters(9),
-                                Units.inchesToMeters(11),
+                                Units.inchesToMeters(-11),
                                 Units.inchesToMeters(17),
-                                new Rotation3d(0, Units.degreesToRadians(25), Units.degreesToRadians(180))))
+                                new Rotation3d(0, Units.degreesToRadians(-25), Units.degreesToRadians(180))))
                 .withAprilTagIdFilter(List.of(17, 18, 19, 20, 21, 22, 6, 7, 8, 9, 10, 11))
                 .save();
 
