@@ -16,9 +16,12 @@ import com.pathplanner.lib.util.swerve.SwerveSetpoint;
 import com.pathplanner.lib.util.swerve.SwerveSetpointGenerator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -28,8 +31,18 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.utils.AllianceFlipUtil;
 import frc.robot.utils.FieldConstants.Hub;
+import limelight.Limelight;
+import limelight.networktables.AngularVelocity3d;
+import limelight.networktables.LimelightPoseEstimator;
+import limelight.networktables.LimelightResults;
+import limelight.networktables.Orientation3d;
+import limelight.networktables.PoseEstimate;
+
+import static edu.wpi.first.units.Units.DegreesPerSecond;
+
 import java.io.File;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 import org.json.simple.parser.ParseException;
@@ -47,7 +60,79 @@ public class SwerveSubsystem extends SubsystemBase
 
   File        directory = new File(Filesystem.getDeployDirectory(), "swerve");
   SwerveDrive swerveDrive;
+// limelight stuff
+  private Limelight              limelight_swerve;
+  private LimelightPoseEstimator limelightPoseEstimator_swerve;
 
+ limelight_swerve = new Limelight("limelight"); // We didn't rename the limelight
+    limelight_swerve
+        .getSettings()
+        .withPipelineIndex(0)
+        .withCameraOffset(
+            new Pose3d( // TODO: Give the right offset here
+                Units.inchesToMeters(-12),
+                Units.inchesToMeters(-12), /// +Right, maybe?
+                Units.inchesToMeters(10),
+                new Rotation3d(0, Units.degreesToRadians(45), Units.degreesToRadians(180)))) ///  Roll, Pitch, Yaw
+        .withAprilTagIdFilter(List.of(17, 18, 19, 20, 21, 22, 6, 7, 8, 9, 10, 11))
+        .save();
+    limelightPoseEstimator_swerve = limelight_swerve.createPoseEstimator(EstimationMode.MEGATAG1);
+
+     private int     outofAreaReading = 0;
+  private boolean initialReading   = false;
+  private double  lastLLTimestamp_swerve  = 0;
+
+   private double updateLimelight(Limelight ll, LimelightPoseEstimator llPoseEst, double llTimestamp, Angle cameraYaw, String llname)
+  {
+    ll
+        .getSettings()
+        .withRobotOrientation(
+            new Orientation3d(
+                new Rotation3d(swerveDrive.getOdometryHeading().rotateBy(new Rotation2d(cameraYaw))),
+                new AngularVelocity3d(DegreesPerSecond.of(0), DegreesPerSecond.of(0), DegreesPerSecond.of(0))))
+        .save();
+
+    Optional<PoseEstimate> poseEstimates =
+        llPoseEst.getPoseEstimate();
+    Optional<LimelightResults> results = ll.getLatestResults();
+    if (results.isPresent() && poseEstimates.isPresent())
+    {
+      LimelightResults result       = results.get();
+      PoseEstimate     poseEstimate = poseEstimates.get();
+      if (result.valid)
+      {
+        Pose2d estimatorPose = poseEstimate.pose.toPose2d();
+        Pose2d usefulPose    = result.getBotPose2d(Alliance.Blue);
+        swerveDrive.field.getObject("Vision").setPose(estimatorPose);
+        // TODO: Tune this to be better
+        SmartDashboard.putNumber("LimelightTuning/"+llname+"/ambiguity", poseEstimate.getAvgTagAmbiguity());
+        if (poseEstimate.getAvgTagAmbiguity() < 0.04 && // TODO: Change me, i am bad, too low
+            poseEstimate.tagCount > 1) 
+        {
+          if (llTimestamp != poseEstimate.timestampSeconds)
+          {
+            var stdDevScale = Math.pow(poseEstimate.avgTagDist, 2.0) / poseEstimate.tagCount;
+            // stdDevScale = distance^2/tagsInView
+            // swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(0.09 * stdDevScale,
+            // 0.023 * stdDevScale,
+            //  0.07 * stdDevScale));
+            swerveDrive.addVisionMeasurement(estimatorPose,
+                                             poseEstimate.timestampSeconds);
+            return poseEstimate.timestampSeconds;
+          }
+        }
+      }
+    }
+    return llTimestamp;
+  }
+  
+  {
+    outofAreaReading = 0;
+    swerveDrive.updateOdometry();
+    
+    lastLLTimestamp_swerve = updateLimelight(limelight_swerve, limelightPoseEstimator_swerve, lastLLTimestamp_swerve, Degrees.of(180), "swerve");
+
+    
   public SwerveSubsystem()
   {
     SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
