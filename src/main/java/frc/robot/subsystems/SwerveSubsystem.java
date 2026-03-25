@@ -82,10 +82,10 @@ public class SwerveSubsystem extends SubsystemBase {
                 .withPipelineIndex(0)
                 .withCameraOffset(
                         new Pose3d(
-                                Units.inchesToMeters(9),
+                                Units.inchesToMeters(-9),
                                 Units.inchesToMeters(-11),
                                 Units.inchesToMeters(17),
-                                new Rotation3d(0, Units.degreesToRadians(-25), Units.degreesToRadians(180))))
+                                new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(25), Units.degreesToRadians(0))))
                 .withAprilTagIdFilter(List.of(17, 18, 19, 20, 21, 22, 6, 7, 8, 9, 10, 11))
                 .save();
 
@@ -113,7 +113,7 @@ public class SwerveSubsystem extends SubsystemBase {
                 swerveDrive.field.getObject("Vision").setPose(estimatorPose);
 
                 SmartDashboard.putNumber("LimeLightTuning/" + llname + "/ambiguity", poseEstimate.getAvgTagAmbiguity());
-                if (poseEstimate.getAvgTagAmbiguity() < 0.04 &&
+                if (poseEstimate.getAvgTagAmbiguity() < 0.1 &&
                         poseEstimate.tagCount > 1) {
                     if (llTImestamp != poseEstimate.timestampSeconds) {
                         var stdDevScale = Math.pow(poseEstimate.avgTagDist, 2.0) / poseEstimate.tagCount;
