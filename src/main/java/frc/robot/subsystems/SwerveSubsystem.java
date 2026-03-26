@@ -63,6 +63,7 @@ public class SwerveSubsystem extends SubsystemBase
   private Limelight              limelight_swerve;
   private LimelightPoseEstimator limelightPoseEstimator_swerve;
   private double                 lastLLTimestamp_swerve = 0;
+  private boolean isLLEnabled_swerve = false;
 
   public SwerveSubsystem()
   {
@@ -90,6 +91,7 @@ public class SwerveSubsystem extends SubsystemBase
         .getSettings()
         .withPipelineIndex(0)
         .withImuMode(ImuMode.ExternalImu)
+        .withThrottle(200)
         .withCameraOffset(
             new Pose3d(
                 Units.inchesToMeters(-9),
@@ -147,6 +149,11 @@ public class SwerveSubsystem extends SubsystemBase
   @Override
   public void periodic()
   {
+    if (!isLLEnabled_swerve && DriverStation.isEnabled())
+    {
+      isLLEnabled_swerve = true;
+      limelight_swerve.getSettings().withThrottle(0).save();
+    }
     swerveDrive.updateOdometry();
     lastLLTimestamp_swerve = updateLimelight(limelight_swerve,
                                              limelightPoseEstimator_swerve,
