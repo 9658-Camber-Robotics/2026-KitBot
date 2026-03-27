@@ -21,7 +21,7 @@ public class AutoAimCommand extends Command
   {
     this.swerveSubsystem = swerveSubsystem;
     this.swerveInputStream = swerveInputStream.copy();
-    this.swerveInputStream.scaleTranslation(slowScale);
+//    this.swerveInputStream.scaleTranslation(slowScale);
     // each subsystem used by the command must be passed into the
     // addRequirements() method (which takes a vararg of Subsystem)
     addRequirements(this.swerveSubsystem);
@@ -31,9 +31,8 @@ public class AutoAimCommand extends Command
   public void initialize()
   {
     swerveInputStream.aim(AllianceFlipUtil.apply(new Pose2d(Hub.topCenterPoint.toTranslation2d(), Rotation2d.kZero)))
-                     .aimHeadingOffset(Rotation2d.kZero)
-                     .aimHeadingOffset(true)
-                     .aimLookahead(Seconds.of(0.1))
+//                     .aimHeadingOffset(Rotation2d.kZero)
+//                     .aimHeadingOffset(true)
                      .aimWhile(true);
 
   }

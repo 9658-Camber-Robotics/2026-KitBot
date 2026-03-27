@@ -13,7 +13,6 @@ import com.pathplanner.lib.events.EventTrigger;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.Shooter;
 import frc.robot.Constants.Shooter.Setpoints;
@@ -22,7 +21,6 @@ import frc.robot.commands.AutoAimCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.OuttakeCommand;
 import frc.robot.commands.ShootAndIndexCommand;
-//import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -39,31 +37,35 @@ public class RobotContainer
   private final CommandXboxController driverController   = new CommandXboxController(0);
   private final CommandXboxController operatorController = new CommandXboxController(1);
   private final CommandXboxController testController = new CommandXboxController(2);
-  
+
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
                                                                 () -> driverController.getLeftY() * -1,
-
                                                                 () -> driverController.getLeftX() * -1) // set to 0
-                                                            .withControllerRotationAxis(() ->
-                                                                                            driverController.getRightX() *
-                                                                                            1)
+                                                            .withControllerRotationAxis(() -> driverController.getRightX())
                                                             .deadband(.1)
-
-                                                             
                                                             .scaleTranslation(.8)
-
                                                             .allianceRelativeControl(true);
 
-
-  Command driveFieldOrientedAngularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
-
-  Command driveSetpointGen = drivebase.driveWithSetpointGeneratorFieldRelative(driveAngularVelocity);
-
+  /// Testing SwerveInputStream to ensure that our swerve drive is capable of running in autonomous
+  SwerveInputStream driveDirectAngle = SwerveInputStream.of(drivebase.getSwerveDrive(),
+                                                            () -> driverController.getLeftY() * -1,
+                                                            () -> driverController.getLeftX() * -1)
+                                                        .withControllerHeadingAxis(driverController::getRightX,
+                                                                                   driverController::getRightY)
+                                                        .deadband(0.1)
+                                                        .scaleTranslation(.8)
+                                                        .allianceRelativeControl(true);
 
   public RobotContainer()
   {
-    drivebase.setDefaultCommand(driveFieldOrientedAngularVelocity);
-    shooter.setDefaultCommand(shooter.setVelocityCommand(() -> Setpoints.maxRPM.times(MathUtil.clamp(MathUtil.applyDeadband(-operatorController.getRightY(),0.1 ),
+    // Regular control is commented out below.
+//    drivebase.setDefaultCommand(drivebase.driveFieldOriented(driveAngularVelocity));
+    // Test control is this.
+    drivebase.setDefaultCommand(drivebase.driveFieldOriented(driveDirectAngle)); // Use this to test for the 8 steps.
+
+    shooter.setDefaultCommand(shooter.setVelocityCommand(() -> Setpoints.maxRPM.times(MathUtil.clamp(MathUtil.applyDeadband(
+                                                                                                         -operatorController.getRightY(),
+                                                                                                         0.1),
                                                                                                      0,
                                                                                                      1))));
     //climb.setDefaultCommand(climb.setDutycyleCommand(operatorController::getLeftY));
@@ -90,7 +92,6 @@ public class RobotContainer
     operatorController.povDown().whileTrue(indexer.setDutycycleCommand(0.8));
     operatorController.povLeft().whileTrue(shooter.setDutycycleCommand(-0.8));
     operatorController.povRight().whileTrue(shooter.setDutycycleCommand(0.8));
-
 
     // auto-aim
     driverController.leftTrigger(0.3).whileTrue(new AutoAimCommand(drivebase, driveAngularVelocity, 0.4));
