@@ -169,7 +169,7 @@ public final class Constants
         .withIdleMode(MotorMode.COAST)
         .withMotorInverted(false) 
         .withFollowers(Pair.of(new TalonFX(41), true ) )
-        .withStatorCurrentLimit(Amps.of(80))
+        .withStatorCurrentLimit(Amps.of(40))
         .withGearing(new MechanismGearing(GearBox.fromTeeth(40,60,60)))
         .withClosedLoopController(0, 0, 0)
         .withFeedforward(new SimpleMotorFeedforward(0, 0.1714, 0));
