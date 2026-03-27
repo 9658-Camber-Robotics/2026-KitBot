@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
+import static edu.wpi.first.units.Units.Fahrenheit;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -98,7 +99,7 @@ public class SwerveSubsystem extends SubsystemBase
                 Units.inchesToMeters(-11),
                 Units.inchesToMeters(15),
                 new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(25), Units.degreesToRadians(0))))
-        .withAprilTagIdFilter(List.of(17, 18, 19, 20, 21, 22,25,26, 27, 18, 19, 20, 21, 24, 6, 7, 8, 9, 10, 11))
+        .withAprilTagIdFilter(List.of(17, 18, 19, 20, 21, 22, 25, 26, 27, 18, 19, 20, 21, 24, 6, 7, 8, 9, 10, 11))
         .save();
 
     limelightPoseEstimator_swerve = limelight_swerve.createPoseEstimator(LimelightPoseEstimator.EstimationMode.MEGATAG1);
@@ -149,6 +150,26 @@ public class SwerveSubsystem extends SubsystemBase
   @Override
   public void periodic()
   {
+    if (limelight_swerve.getLatestResults().isPresent())
+    {
+      var results = limelight_swerve.getLatestResults().get();
+      var temp    = results.hardware.getTemp();
+      SmartDashboard.putNumber("LimeLightTuning/swerve/tempF", temp.in(Fahrenheit));
+      if (!DriverStation.isFMSAttached())
+      {
+        // Turns up throttle when temp is above 200F
+        if (temp.gt(Fahrenheit.of(200)))
+        {
+          limelight_swerve.getSettings().withThrottle(150).save();
+        } else if (temp.gt(Fahrenheit.of(150))) // 150F
+        {
+          limelight_swerve.getSettings().withThrottle(100).save();
+        } else if (temp.gt(Fahrenheit.of(100))) // 100F
+        {
+          limelight_swerve.getSettings().withThrottle(25).save();
+        }
+      }
+    }
     if (!isLLEnabled_swerve && DriverStation.isEnabled())
     {
       isLLEnabled_swerve = true;
