@@ -155,7 +155,7 @@ public class SwerveSubsystem extends SubsystemBase
       var results = limelight_swerve.getLatestResults().get();
       var temp    = results.hardware.getTemp();
       SmartDashboard.putNumber("LimeLightTuning/swerve/tempF", temp.in(Fahrenheit));
-      if (!DriverStation.isFMSAttached())
+      if (!DriverStation.isFMSAttached() && DriverStation.isEnabled() && isLLEnabled_swerve)
       {
         // Turns up throttle when temp is above 200F
         if (temp.gt(Fahrenheit.of(200)))
