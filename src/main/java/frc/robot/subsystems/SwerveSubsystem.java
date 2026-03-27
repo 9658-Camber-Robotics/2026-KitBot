@@ -98,7 +98,7 @@ public class SwerveSubsystem extends SubsystemBase
                 Units.inchesToMeters(-11),
                 Units.inchesToMeters(15),
                 new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(25), Units.degreesToRadians(0))))
-        .withAprilTagIdFilter(List.of(17, 18, 19, 20, 21, 22, 6, 7, 8, 9, 10, 11))
+        .withAprilTagIdFilter(List.of(17, 18, 19, 20, 21, 22,25,26, 27, 18, 19, 20, 21, 24, 6, 7, 8, 9, 10, 11))
         .save();
 
     limelightPoseEstimator_swerve = limelight_swerve.createPoseEstimator(LimelightPoseEstimator.EstimationMode.MEGATAG1);
@@ -113,7 +113,7 @@ public class SwerveSubsystem extends SubsystemBase
         .withRobotOrientation(
             new Orientation3d(
                 new Rotation3d(swerveDrive.getOdometryHeading().rotateBy(new Rotation2d(cameraYaw))),
-                new AngularVelocity3d(DegreesPerSecond.of(0), DegreesPerSecond.of(0), DegreesPerSecond.of(0))))
+                new AngularVelocity3d(DegreesPerSecond.of(0), DegreesPerSecond.of(0), DegreesPerSecond.of(180))))
         .save();
     Optional<PoseEstimate> poseEstimates =
         llPoseEst.getPoseEstimate();

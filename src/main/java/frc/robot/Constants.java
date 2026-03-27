@@ -152,10 +152,10 @@ public final class Constants
     {
 
       public static final AngularVelocity tolerance = RPM.of(60);
-      public static final AngularVelocity lowRPM    = RPM.of(4900); // make this higher probably
-      public static final AngularVelocity midRPM    = RPM.of(5300); // high enough
-      public static final AngularVelocity high      = RPM.of(5600); // max according to documentation
-      public static final AngularVelocity maxRPM    = RPM.of(5600); // max acoording to documentation
+      public static final AngularVelocity lowRPM    = RPM.of(3000); // make this higher probably
+      public static final AngularVelocity midRPM    = RPM.of(3500); // high enough
+      public static final AngularVelocity high      = RPM.of(3600); // max according to documentation
+      public static final AngularVelocity maxRPM    = RPM.of(3600); // max acoording to documentation
       public static final AngularVelocity autonomousPeriodRPM = RPM.of(3000);
 
     }
@@ -172,7 +172,7 @@ public final class Constants
         .withStatorCurrentLimit(Amps.of(80))
         .withGearing(new MechanismGearing(GearBox.fromTeeth(40,60,60)))
         .withClosedLoopController(0, 0, 0)
-        .withFeedforward(new SimpleMotorFeedforward(.15, 0.17, 1));
+        .withFeedforward(new SimpleMotorFeedforward(0, 0.1714, 0));
     public static final FlyWheelConfig             config                    = new FlyWheelConfig()
         .withTelemetry("Shooter", verbosity)
         .withDiameter(Inches.of(4))
