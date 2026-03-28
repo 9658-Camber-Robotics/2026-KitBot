@@ -53,7 +53,7 @@ public class RobotContainer
                                                         .withControllerHeadingAxis(driverController::getRightX,
                                                                                    driverController::getRightY)
                                                         .deadband(0.1)
-                                                        .scaleTranslation(.8)
+                                                        .scaleTranslation(.8).headingWhile(true)
                                                         .allianceRelativeControl(true);
 
   public RobotContainer()
