@@ -94,7 +94,7 @@ public class RobotContainer
     operatorController.povRight().whileTrue(shooter.setDutycycleCommand(0.8));
 
     // auto-aim
-    driverController.leftTrigger(0.3).whileTrue(new AutoAimCommand(drivebase, driveAngularVelocity, 0.4));
+    driverController.button(1).whileTrue(new AutoAimCommand(drivebase, driveAngularVelocity, 0.4));
     
     testController.x().whileTrue(new ShootAndIndexCommand(indexer, shooter, RPM.of(3000))); 
     testController.y().whileTrue(new ShootAndIndexCommand(indexer, shooter, RPM.of(3500)));

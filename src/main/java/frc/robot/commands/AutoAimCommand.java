@@ -4,10 +4,12 @@ import static edu.wpi.first.units.Units.Seconds;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.utils.AllianceFlipUtil;
 import frc.robot.utils.FieldConstants.Hub;
+import java.util.List;
 import swervelib.SwerveInputStream;
 
 
@@ -30,7 +32,10 @@ public class AutoAimCommand extends Command
   @Override
   public void initialize()
   {
-    swerveInputStream.aim(AllianceFlipUtil.apply(new Pose2d(Hub.topCenterPoint.toTranslation2d(), Rotation2d.kZero)))
+    Pose2d targetPose = AllianceFlipUtil.apply(new Pose2d(Hub.topCenterPoint.toTranslation2d(), Rotation2d.kZero));
+    swerveSubsystem.getField().getObject("AimTarget").setPose(targetPose);
+
+    swerveInputStream.aim(targetPose)
 //                     .aimHeadingOffset(Rotation2d.kZero)
 //                     .aimHeadingOffset(true)
                      .aimWhile(true);
@@ -54,5 +59,6 @@ public class AutoAimCommand extends Command
   public void end(boolean interrupted)
   {
     swerveInputStream.aimWhile(false);
+    swerveSubsystem.getField().getObject("AimTarget").setPoses(List.of());
   }
 }

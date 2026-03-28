@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -399,5 +400,10 @@ public class SwerveSubsystem extends SubsystemBase
   public void driveFieldOrientedSetpoint(ChassisSpeeds speeds)
   {
     swerveDrive.driveFieldOriented(speeds);
+  }
+
+  public Field2d getField()
+  {
+    return swerveDrive.field;
   }
 }
