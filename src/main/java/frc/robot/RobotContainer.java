@@ -59,9 +59,9 @@ public class RobotContainer
   public RobotContainer()
   {
     // Regular control is commented out below.
-//    drivebase.setDefaultCommand(drivebase.driveFieldOriented(driveAngularVelocity));
+    drivebase.setDefaultCommand(drivebase.driveFieldOriented(driveAngularVelocity));
     // Test control is this.
-    drivebase.setDefaultCommand(drivebase.driveFieldOriented(driveDirectAngle)); // Use this to test for the 8 steps.
+    // drivebase.setDefaultCommand(drivebase.driveFieldOriented(driveDirectAngle)); // Use this to test for the 8 steps.
 
     shooter.setDefaultCommand(shooter.setVelocityCommand(() -> Setpoints.maxRPM.times(MathUtil.clamp(MathUtil.applyDeadband(
                                                                                                          -operatorController.getRightY(),
@@ -97,8 +97,8 @@ public class RobotContainer
     driverController.leftTrigger(0.3).whileTrue(new AutoAimCommand(drivebase, driveAngularVelocity, 0.4));
     
     testController.x().whileTrue(new ShootAndIndexCommand(indexer, shooter, RPM.of(3000))); 
-    testController.y().whileTrue(new ShootAndIndexCommand(indexer, shooter, RPM.of(3500)));
-    testController.b().whileTrue(new ShootAndIndexCommand(indexer, shooter, RPM.of(3700)));
+    testController.y().whileTrue(new ShootAndIndexCommand(indexer, shooter, RPM.of(3200)));
+    testController.b().whileTrue(new ShootAndIndexCommand(indexer, shooter, RPM.of(3900)));
     testController.a().whileTrue(new ShootAndIndexCommand(indexer, shooter, RPM.of(3600)));
     testController.rightBumper().whileTrue(new ShootAndIndexCommand(indexer, shooter, RPM.of(4000)));
     testController.leftBumper().whileTrue(new ShootAndIndexCommand(indexer, shooter, RPM.of(4000)));

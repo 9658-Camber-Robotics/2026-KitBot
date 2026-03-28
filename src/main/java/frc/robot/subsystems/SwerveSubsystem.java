@@ -131,7 +131,7 @@ public class SwerveSubsystem extends SubsystemBase
         swerveDrive.field.getObject("Vision").setPose(estimatorPose);
 
         SmartDashboard.putNumber("LimeLightTuning/" + llname + "/ambiguity", poseEstimate.getAvgTagAmbiguity());
-        if (poseEstimate.getAvgTagAmbiguity() < 0.1 &&
+        if (poseEstimate.getAvgTagAmbiguity() < 0.2 &&
             poseEstimate.tagCount > 1)
         {
           if (llTImestamp != poseEstimate.timestampSeconds)
