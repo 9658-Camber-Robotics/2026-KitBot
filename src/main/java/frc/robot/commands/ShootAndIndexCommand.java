@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Second;
 
@@ -29,9 +30,9 @@ public class ShootAndIndexCommand extends Command
   private final Supplier<AngularVelocity>  goal;
   private final List<Data>                 shots   = List.of(
       // TUNE HERE
-      new Data(Meters.of(8.41326147155525), RPM.of(3450), Second.of(0.64))
+      new Data(Meters.of(), RPM.of(3450), Second.of(0.64))
 
-                                                            );
+  );
 
   private final InterpolatingDoubleTreeMap shotMap = InterpolatingDoubleTreeMap.ofEntries(shots.stream()
                                                                                                .map(Data::toEntry)
