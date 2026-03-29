@@ -30,10 +30,12 @@ public class ShootAndIndexCommand extends Command
   private final Supplier<AngularVelocity>  goal;
   private final List<Data>                 shots   = List.of(
       // TUNE HERE
-      new Data(Meters.of(), RPM.of(3450), Second.of(0.64))
-
+          new Data(Inches.of(115), RPM.of(3250), Second.of(0.64)),
+          new Data(Inches.of(135), RPM.of(3500), Second.of(0.64)),
+          new Data(Inches.of(166), RPM.of(4000), Second.of(0.64)),
+          new Data(Inches.of(92), RPM.of(3200), Second.of(0.64)),
+          new Data(Meters.of(8.41326147155525), RPM.of(3450), Second.of(0.64))
   );
-
   private final InterpolatingDoubleTreeMap shotMap = InterpolatingDoubleTreeMap.ofEntries(shots.stream()
                                                                                                .map(Data::toEntry)
                                                                                                .toArray(Map.Entry[]::new));
