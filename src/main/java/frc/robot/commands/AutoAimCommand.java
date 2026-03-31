@@ -18,6 +18,7 @@ public class AutoAimCommand extends Command
 
   private final SwerveSubsystem   swerveSubsystem;
   private final SwerveInputStream swerveInputStream;
+  private Pose2d targetPose;
 
   public AutoAimCommand(SwerveSubsystem swerveSubsystem, SwerveInputStream swerveInputStream, double slowScale)
   {
@@ -32,12 +33,12 @@ public class AutoAimCommand extends Command
   @Override
   public void initialize()
   {
-    Pose2d targetPose = AllianceFlipUtil.apply(new Pose2d(Hub.topCenterPoint.toTranslation2d(), Rotation2d.kZero));
+    targetPose = AllianceFlipUtil.apply(new Pose2d(Hub.topCenterPoint.toTranslation2d(), Rotation2d.kZero));
     swerveSubsystem.getField().getObject("AimTarget").setPose(targetPose);
 
     swerveInputStream.aim(targetPose)
-//                     .aimHeadingOffset(Rotation2d.kZero)
-//                     .aimHeadingOffset(true)
+                     .aimHeadingOffset(Rotation2d.kZero)
+                     .aimHeadingOffset(true)
                      .aimWhile(true);
 
   }

@@ -131,7 +131,7 @@ public class SwerveSubsystem extends SubsystemBase
         swerveDrive.field.getObject("Vision").setPose(estimatorPose);
 
         SmartDashboard.putNumber("LimeLightTuning/" + llname + "/ambiguity", poseEstimate.getAvgTagAmbiguity());
-        if (poseEstimate.getAvgTagAmbiguity() < 0.2 &&
+        if (poseEstimate.getAvgTagAmbiguity() < 0.3 &&
             poseEstimate.tagCount > 1)
         {
           if (llTImestamp != poseEstimate.timestampSeconds)
@@ -156,20 +156,20 @@ public class SwerveSubsystem extends SubsystemBase
       var results = limelight_swerve.getLatestResults().get();
       var temp    = results.hardware.getTemp();
       SmartDashboard.putNumber("LimeLightTuning/swerve/tempF", temp.in(Fahrenheit));
-      if (!DriverStation.isFMSAttached() && DriverStation.isEnabled() && isLLEnabled_swerve)
-      {
-        // Turns up throttle when temp is above 200F
-        if (temp.gt(Fahrenheit.of(200)))
-        {
-          limelight_swerve.getSettings().withThrottle(150).save();
-        } else if (temp.gt(Fahrenheit.of(150))) // 150F
-        {
-          limelight_swerve.getSettings().withThrottle(100).save();
-        } else if (temp.gt(Fahrenheit.of(100))) // 100F
-        {
-          limelight_swerve.getSettings().withThrottle(25).save();
-        }
-      }
+//      if (!DriverStation.isFMSAttached() && DriverStation.isEnabled() && isLLEnabled_swerve)
+//      {
+//        // Turns up throttle when temp is above 200F
+//        if (temp.gt(Fahrenheit.of(200)))
+//        {
+//          limelight_swerve.getSettings().withThrottle(150).save();
+//        } else if (temp.gt(Fahrenheit.of(150))) // 150F
+//        {
+//          limelight_swerve.getSettings().withThrottle(100).save();
+//        } else if (temp.gt(Fahrenheit.of(100))) // 100F
+//        {
+//          limelight_swerve.getSettings().withThrottle(25).save();
+//        }
+//      }
     }
     if (!isLLEnabled_swerve && DriverStation.isEnabled())
     {

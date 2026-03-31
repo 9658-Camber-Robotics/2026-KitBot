@@ -152,7 +152,7 @@ public final class Constants
     {
 
       public static final AngularVelocity tolerance = RPM.of(60);
-      public static final AngularVelocity lowRPM    = RPM.of(3000); // make this higher probably
+      public static final AngularVelocity lowRPM    = RPM.of(3100); // make this higher probably
       public static final AngularVelocity midRPM    = RPM.of(3500); // high enough
       public static final AngularVelocity high      = RPM.of(3600); // max according to documentation
       public static final AngularVelocity maxRPM    = RPM.of(3600); // max acoording to documentation
@@ -171,8 +171,8 @@ public final class Constants
         .withFollowers(Pair.of(new TalonFX(41), true ) )
         .withStatorCurrentLimit(Amps.of(40))
         .withGearing(new MechanismGearing(GearBox.fromTeeth(40,60,60)))
-        .withClosedLoopController(0, 0, 0)
-        .withFeedforward(new SimpleMotorFeedforward(0, 0.1714, 0));
+        .withClosedLoopController(0.001, 0, 0)
+        .withFeedforward(new SimpleMotorFeedforward(0.000, 0.170, 0.1));
     public static final FlyWheelConfig             config                    = new FlyWheelConfig()
         .withTelemetry("Shooter", verbosity)
         .withDiameter(Inches.of(4))

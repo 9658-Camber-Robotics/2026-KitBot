@@ -4,8 +4,12 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.CANIDS;
 import frc.robot.Constants.Shooter;
+
+import java.lang.constant.Constable;
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 import yams.mechanisms.velocity.FlyWheel;
 import yams.motorcontrollers.SmartMotorController;
@@ -65,4 +69,9 @@ public class ShooterSubsystem extends SubsystemBase
   {
     return flyWheel.run(velocity);
   }
+
+    public boolean isNear(AngularVelocity tolerance) {
+
+      return Shooter.flyWheelRecoveryDebouncer.calculate(flyWheel.getSpeed().isNear(shooterMotorController.getMechanismSetpointVelocity().orElse(shooterMotorController.getMechanismVelocity()),tolerance));
+    }
 }
