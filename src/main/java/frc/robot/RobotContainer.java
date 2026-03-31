@@ -80,7 +80,7 @@ public class RobotContainer {
 
 
     private void configureBindings() {
-        SmartDashboard.putData("Index Balls", indexer.setDutycycleCommand(-0.3).onlyWhile(()->shooter.isNear(RPM.of(25))).repeatedly());
+        SmartDashboard.putData("Index Balls", indexer.setDutycycleCommand(-1.0).onlyWhile(()->shooter.isNear(RPM.of(25))).repeatedly());
         // Shooting commands
         operatorController.a().whileTrue(new ShootAndIndexCommand(indexer, shooter, Setpoints.lowRPM));
         operatorController.b().whileTrue(new ShootAndIndexCommand(indexer, shooter, Setpoints.midRPM));
