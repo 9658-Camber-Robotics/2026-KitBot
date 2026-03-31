@@ -83,7 +83,7 @@ public class ShootAndIndexCommand extends Command {
         SmartDashboard.putNumber("Shooter/RPM", shooterSubsystem.getVelocity().in(RPM));
         if ((shooterSubsystem.getVelocity().isNear(goal.get(), RPM.of(50)))) {
 //      indexerSubsystem.setVelocity(Indexer.Setpoints.indexSpeed);
-            indexerSubsystem.setDutycycle(-0.3);
+            indexerSubsystem.setDutycycle(-1.0);
 
 
         } else {
