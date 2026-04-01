@@ -48,8 +48,8 @@ public class RobotContainer {
 
     /// Testing SwerveInputStream to ensure that our swerve drive is capable of running in autonomous
     SwerveInputStream driveDirectAngle = SwerveInputStream.of(drivebase.getSwerveDrive(),
-                    () -> driverController.getLeftY() * -1,
-                    () -> driverController.getLeftX() * -1)
+                    () -> driverController.getLeftY() * 1,
+                    () -> driverController.getLeftX() * 1)
             .withControllerHeadingAxis(driverController::getRightX,
                     driverController::getRightY)
             .deadband(0.1)
@@ -69,12 +69,12 @@ public class RobotContainer {
                 1))));
         //climb.setDefaultCommand(climb.setDutycyleCommand(operatorController::getLeftY));
         indexer.setDefaultCommand(indexer.setDutycycleCommand(0));
-
-        new EventTrigger("StartIntake").onTrue(new IntakeCommand(indexer, shooter));
-        new EventTrigger("StopIntake").onTrue(new OuttakeCommand(indexer, shooter));
-        NamedCommands.registerCommand("ShootBalls",
-                shooter.setVelocityCommand(Shooter.Setpoints.autonomousPeriodRPM)
-                        .withTimeout(Seconds.of(4)));
+//
+//        new EventTrigger("StartIntake").onTrue(new IntakeCommand(indexer, shooter));
+//        new EventTrigger("StopIntake").onTrue(new OuttakeCommand(indexer, shooter));
+//        NamedCommands.registerCommand("ShootBalls",
+//                shooter.setVelocityCommand(Shooter.Setpoints.autonomousPeriodRPM)
+//                        .withTimeout(Seconds.of(4)));
         configureBindings();
     }
 
@@ -122,6 +122,6 @@ public class RobotContainer {
 
 
     public Command getAutonomousCommand() {
-        return Commands.none(); // drivebase.getAutonomousCommand("SimpleAuto");
+        return drivebase.getAutonomousCommand("Simple Auto");
     }
 }
