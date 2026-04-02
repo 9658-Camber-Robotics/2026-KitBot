@@ -48,8 +48,8 @@ public class RobotContainer {
 
     /// Testing SwerveInputStream to ensure that our swerve drive is capable of running in autonomous
     SwerveInputStream driveDirectAngle = SwerveInputStream.of(drivebase.getSwerveDrive(),
-                    () -> driverController.getLeftY() * 1,
-                    () -> driverController.getLeftX() * 1)
+                    () -> driverController.getLeftY() * -1,
+                    () -> driverController.getLeftX() * -1)
             .withControllerHeadingAxis(driverController::getRightX,
                     driverController::getRightY)
             .deadband(0.1)
@@ -67,7 +67,7 @@ public class RobotContainer {
                         0.1),
                 0,
                 1))));
-        //climb.setDefaultCommand(climb.setDutycyleCommand(operatorController::getLeftY));
+        // climb.setDefaultCommand(climb.setDutycyleCommand(operatorController::getLeftY));
         indexer.setDefaultCommand(indexer.setDutycycleCommand(0));
 //
 //        new EventTrigger("StartIntake").onTrue(new IntakeCommand(indexer, shooter));
