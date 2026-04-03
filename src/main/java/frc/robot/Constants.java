@@ -105,7 +105,7 @@ public final class Constants
         .withTelemetry("ClimberMotor", verbosity)
         .withIdleMode(MotorMode.BRAKE)
         .withMotorInverted(false)
-        .withStatorCurrentLimit(Amps.of(60))
+        .withSupplyCurrentLimit(Amps.of(60))
         .withGearing(new MechanismGearing(GearBox.fromTeeth(20,10,28)))
         .withClosedLoopController(0, 0, 0)
         .withFeedforward(new ArmFeedforward(0, 0, 0))
@@ -127,7 +127,7 @@ public final class Constants
         .withTelemetry("IndexerMotor", verbosity)
         .withIdleMode(MotorMode.BRAKE)
         .withMotorInverted(false)
-        .withStatorCurrentLimit(Amps.of(60))
+        .withStatorCurrentLimit(Amps.of(40))
         .withGearing(new MechanismGearing(GearBox.fromTeeth(12,80,36)))
         .withClosedLoopController(0, 0, 0)
         .withFeedforward(new SimpleMotorFeedforward(0, 10, 0));
