@@ -127,7 +127,7 @@ public final class Constants
         .withTelemetry("IndexerMotor", verbosity)
         .withIdleMode(MotorMode.BRAKE)
         .withMotorInverted(false)
-        .withStatorCurrentLimit(Amps.of(80))
+        .withStatorCurrentLimit(Amps.of(60))
         .withGearing(new MechanismGearing(GearBox.fromTeeth(12,80,36)))
         .withClosedLoopController(0, 0, 0)
         .withFeedforward(new SimpleMotorFeedforward(0, 10, 0));
@@ -156,7 +156,7 @@ public final class Constants
       public static final AngularVelocity midRPM    = RPM.of(3500); // high enough
       public static final AngularVelocity high      = RPM.of(3600); // max according to documentation
       public static final AngularVelocity maxRPM    = RPM.of(3600); // max acoording to documentation
-      public static final AngularVelocity autonomousPeriodRPM = RPM.of(3000);
+      public static final AngularVelocity autonomousPeriodRPM = RPM.of(3500);
 
     }
 

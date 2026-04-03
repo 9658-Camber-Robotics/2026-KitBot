@@ -8,9 +8,11 @@ package frc.robot;
 import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Seconds;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -19,6 +21,7 @@ import frc.robot.Constants.Shooter;
 import frc.robot.Constants.Shooter.Setpoints;
 import frc.robot.Constants.SwerveDrive;
 import frc.robot.commands.AutoAimCommand;
+import frc.robot.commands.AutoShoot;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.OuttakeCommand;
 import frc.robot.commands.ShootAndIndexCommand;
@@ -28,6 +31,7 @@ import frc.robot.subsystems.SwerveSubsystem;
 import swervelib.SwerveInputStream;
 
 public class RobotContainer {
+        SendableChooser<Command> autChooser;
 
     private final ShooterSubsystem shooter = new ShooterSubsystem();
     //private final ClimbSubsystem   climb     = new ClimbSubsystem();
@@ -56,6 +60,11 @@ public class RobotContainer {
             .scaleTranslation(.8).headingWhile(true)
             .allianceRelativeControl(true);
 
+        public Command STOP(){
+                return shooter.setDutycycleCommand(0)
+                .alongWith(indexer.setDutycycleCommand(0)).withTimeout(Seconds.of(0.000001));
+        }
+
     public RobotContainer() {
         // Regular control is commented out below.
         drivebase.setDefaultCommand(drivebase.driveFieldOriented(driveDirectAngle));
@@ -70,11 +79,23 @@ public class RobotContainer {
         // climb.setDefaultCommand(climb.setDutycyleCommand(operatorController::getLeftY));
         indexer.setDefaultCommand(indexer.setDutycycleCommand(0));
 //
-//        new EventTrigger("StartIntake").onTrue(new IntakeCommand(indexer, shooter));
-//        new EventTrigger("StopIntake").onTrue(new OuttakeCommand(indexer, shooter));
+       //new EventTrigger("StartIntake").onTrue(new IntakeCommand(indexer, shooter));
+       //new EventTrigger("StopIntake").onTrue(new OuttakeCommand(indexer, shooter));
 //        NamedCommands.registerCommand("ShootBalls",
 //                shooter.setVelocityCommand(Shooter.Setpoints.autonomousPeriodRPM)
 //                        .withTimeout(Seconds.of(4)));
+        NamedCommands.registerCommand("ShootBalls", new  AutoShoot(() -> 
+                Shooter.Setpoints.autonomousPeriodRPM, 
+                shooter,
+                indexer, 
+                4));
+        NamedCommands.registerCommand("Stop", STOP());
+        
+        NamedCommands.registerCommand("StartIntake", new IntakeCommand(indexer, shooter));
+        
+        autChooser = AutoBuilder.buildAutoChooser("NO Auto");
+        SmartDashboard.putData("Auto Chooser",autChooser);
+
         configureBindings();
     }
 
@@ -107,7 +128,7 @@ public class RobotContainer {
         // TODO: Tune later
         operatorController.rightBumper().whileTrue(new IntakeCommand(indexer, shooter));
         operatorController.leftBumper().whileTrue(new OuttakeCommand(indexer, shooter));
-
+        
         // Shooting commands
 
         // Prevents Swerve Drive from moving by making an X
@@ -122,6 +143,6 @@ public class RobotContainer {
 
 
     public Command getAutonomousCommand() {
-        return drivebase.getAutonomousCommand("Simple Auto");
+        return drivebase.getAutonomousCommand("Right Auto");
     }
 }
