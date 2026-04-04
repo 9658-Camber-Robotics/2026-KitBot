@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import static edu.wpi.first.units.Units.Feet;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.RPM;
@@ -63,7 +64,7 @@ public class ShootAndIndexCommand extends Command {
         this.indexerSubsystem = indexerSubsystem;
         this.shooterSubsystem = shooterSubsystem;
         this.goal = () -> {
-            return RPM.of(shotMap.get(swerveSubsystem.distanceFromHubMeters()));
+          return RPM.of(shotMap.get((swerveSubsystem.distanceFromHubMeters().minus(Feet.of(2)).in(Meters))));
         };
         // each subsystem used by the command must be passed into the
         // addRequirements() method (which takes a vararg of Subsystem)
