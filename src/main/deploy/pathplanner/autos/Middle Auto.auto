@@ -41,27 +41,9 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "Shoot to hp"
-          }
-        },
-        {
           "type": "wait",
           "data": {
             "waitTime": 3.0
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "hp to back"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ShootBalls"
           }
         }
       ]

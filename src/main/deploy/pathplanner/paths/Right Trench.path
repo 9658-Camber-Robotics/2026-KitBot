@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.8875178316690437,
-        "y": 2.838174037089873
+        "x": 2.9651497860199716,
+        "y": 3.368659058487874
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.0039657631954344,
-        "y": 2.592339514978602
+        "x": 3.0815977175463622,
+        "y": 3.122824536376603
       },
       "isLocked": false,
       "linkedName": "C1"
@@ -48,7 +48,7 @@
   "folder": "Camber Right auto",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 37.23483398157471
+    "rotation": 18.083445383048694
   },
   "useDefaultConstraints": true
 }

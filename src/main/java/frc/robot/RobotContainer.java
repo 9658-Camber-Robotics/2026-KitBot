@@ -143,6 +143,7 @@ public class RobotContainer {
 
 
     public Command getAutonomousCommand() {
-        return drivebase.getAutonomousCommand("Right Auto");
+        return drivebase.getAutonomousCommand("Middle Auto");
+
     }
 }

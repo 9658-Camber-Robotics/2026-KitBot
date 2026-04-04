@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.9263338088445074,
-        "y": 5.529415121255349
+        "x": 3.029843081312411,
+        "y": 4.778972895863053
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.1702520198939226,
-        "y": 5.5842230250508145
+        "x": 3.2737612923618262,
+        "y": 4.833780799658518
       },
       "isLocked": false,
       "linkedName": "B1"
@@ -48,7 +48,7 @@
   "folder": "Camber Left Auto",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -48.81407483429024
+    "rotation": -30.529705899934104
   },
   "useDefaultConstraints": true
 }
