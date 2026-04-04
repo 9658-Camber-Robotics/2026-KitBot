@@ -75,12 +75,12 @@ public class RobotContainer
 //        NamedCommands.registerCommand("ShootBalls",
 //                shooter.setVelocityCommand(Shooter.Setpoints.autonomousPeriodRPM)
 //                        .withTimeout(Seconds.of(4)));
-    NamedCommands.registerCommand("ShootBalls",
+    NamedCommands.registerCommand("ShootBallsOdom",
                                   new ShootAndIndexCommand(indexer,
                                                            shooter,
                                                            drivebase).withTimeout(4));
 
-    NamedCommands.registerCommand("ShootBallsSimple",
+    NamedCommands.registerCommand("ShootBalls",
                                   new ShootAndIndexCommand(indexer,
                                                            shooter,
                                                            Setpoints.autonomousPeriodRPM).withTimeout(4));
