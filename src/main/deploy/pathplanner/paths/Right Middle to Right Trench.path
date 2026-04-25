@@ -3,42 +3,35 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.690161001788908,
-        "y": 5.584525939177102
+        "x": 6.80793152639087,
+        "y": 0.6774179743223976
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.690161001788908,
-        "y": 5.584525939177102
+        "x": 6.122182596291013,
+        "y": 0.6644793152639101
       },
       "isLocked": false,
-      "linkedName": "LeftBumpNZ"
+      "linkedName": "C3"
     },
     {
       "anchor": {
-        "x": 7.9130411449016105,
-        "y": 6.979910554561717
+        "x": 3.7155920114122676,
+        "y": 0.5480313837375184
       },
       "prevControl": {
-        "x": 7.9130411449016105,
-        "y": 7.703534401814912
+        "x": 4.3884022824536375,
+        "y": 0.5480313837375184
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "NZIntake"
+      "linkedName": "C2"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [
-    {
-      "name": "StartIntake",
-      "waypointRelativePos": 0,
-      "endWaypointRelativePos": null,
-      "command": null
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.5,
     "maxAcceleration": 3.0,
@@ -49,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": 0.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Camber Right auto",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": -91.43209618416475
   },
   "useDefaultConstraints": true
 }

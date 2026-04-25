@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.601359570661896,
-        "y": 4.026887298747764
+        "x": 2.8875178316690437,
+        "y": 3.9457602862254024
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.601359570661896,
-        "y": 4.026887298747764
+        "x": 3.1198159742012224,
+        "y": 4.038159274185767
       },
       "isLocked": false,
-      "linkedName": "Shoot"
+      "linkedName": "A1"
     },
     {
       "anchor": {
-        "x": 3.5484078711985685,
-        "y": 5.584525939177102
+        "x": 0.46332142857144165,
+        "y": 0.6985357142934845
       },
       "prevControl": {
-        "x": 2.5911091234347046,
-        "y": 5.552075134168157
+        "x": 0.6870798940802811,
+        "y": 0.8275405572463002
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "LeftBump"
+      "linkedName": "A3"
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Camber Middle Auto",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 1.2698625933615155
   },
   "useDefaultConstraints": true
 }

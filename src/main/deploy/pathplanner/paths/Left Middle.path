@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.9130411449016105,
-        "y": 6.979910554561717
+        "x": 3.560328102710413,
+        "y": 7.431398002853067
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.9130411449016105,
-        "y": 5.979910554561717
+        "x": 5.002291913098092,
+        "y": 7.424881378439648
       },
       "isLocked": false,
-      "linkedName": "NZIntake"
+      "linkedName": "B2"
     },
     {
       "anchor": {
-        "x": 7.9130411449016105,
-        "y": 2.355670840787119
+        "x": 7.7265763195435095,
+        "y": 6.978544935805992
       },
       "prevControl": {
-        "x": 7.9130411449016105,
-        "y": 3.6553245685733238
+        "x": 6.807931526390869,
+        "y": 7.509029957203994
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "NZIntake2"
+      "linkedName": "B3"
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": 90.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Camber Left Auto",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }

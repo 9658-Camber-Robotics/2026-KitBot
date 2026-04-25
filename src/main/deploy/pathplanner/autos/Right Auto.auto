@@ -7,19 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "HubToDepot"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 5.0
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "DepotToShoot"
+            "pathName": "Right Shot"
           }
         },
         {
@@ -31,37 +19,43 @@
         {
           "type": "path",
           "data": {
-            "pathName": "ShootToLeftBump"
+            "pathName": "Right Trench"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "LeftBumpToNZ"
+            "pathName": "Right Middle"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "LeftBumpNZToIntake"
+            "pathName": "Right Middle Intake"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "NZTraversal"
+            "pathName": "Right Middle intake to Right Middle"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "NZIntake2ToRightBump"
+            "pathName": "Right Middle to Right Trench"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "RightBumpNZToRightBump"
+            "pathName": "Right Trench to Right Shot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShootBalls"
           }
         }
       ]

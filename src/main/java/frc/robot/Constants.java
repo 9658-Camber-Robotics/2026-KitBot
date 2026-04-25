@@ -67,7 +67,7 @@ public final class Constants
 
     public static final Distance robotWidth  = Inches.of(24);
     public static final Distance robotLength = Inches.of(32);
-    public static final double maxSpeed = 8.7;
+    public static final double maxSpeed = 9.2;
     public static final Pose2d   startPose   = new Pose2d(new Translation2d(Meter.of(3.5),
                                                                             Meter.of(4)),
 
@@ -105,7 +105,7 @@ public final class Constants
         .withTelemetry("ClimberMotor", verbosity)
         .withIdleMode(MotorMode.BRAKE)
         .withMotorInverted(false)
-        .withStatorCurrentLimit(Amps.of(60))
+        .withSupplyCurrentLimit(Amps.of(60))
         .withGearing(new MechanismGearing(GearBox.fromTeeth(20,10,28)))
         .withClosedLoopController(0, 0, 0)
         .withFeedforward(new ArmFeedforward(0, 0, 0))
@@ -127,7 +127,7 @@ public final class Constants
         .withTelemetry("IndexerMotor", verbosity)
         .withIdleMode(MotorMode.BRAKE)
         .withMotorInverted(false)
-        .withStatorCurrentLimit(Amps.of(80))
+        .withStatorCurrentLimit(Amps.of(40))
         .withGearing(new MechanismGearing(GearBox.fromTeeth(12,80,36)))
         .withClosedLoopController(0, 0, 0)
         .withFeedforward(new SimpleMotorFeedforward(0, 10, 0));
@@ -156,7 +156,7 @@ public final class Constants
       public static final AngularVelocity midRPM    = RPM.of(3500); // high enough
       public static final AngularVelocity high      = RPM.of(3600); // max according to documentation
       public static final AngularVelocity maxRPM    = RPM.of(3600); // max acoording to documentation
-      public static final AngularVelocity autonomousPeriodRPM = RPM.of(3000);
+      public static final AngularVelocity autonomousPeriodRPM = RPM.of(3350);
 
     }
 

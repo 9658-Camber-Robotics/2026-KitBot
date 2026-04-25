@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.Fahrenheit;
+import static edu.wpi.first.units.Units.Meters;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -25,6 +26,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Filesystem;
@@ -182,7 +184,7 @@ public class SwerveSubsystem extends SubsystemBase
                                              lastLLTimestamp_swerve,
                                              Degrees.of(0),
                                              "swerve");
-    SmartDashboard.putNumber("HubDistance(Meters)", distanceFromHubMeters());
+    SmartDashboard.putNumber("HubDistance(Meters)", distanceFromHubMeters().in(Meters));
     // This method will be called once per scheduler run
   }
 
@@ -392,9 +394,10 @@ public class SwerveSubsystem extends SubsystemBase
     return run(swerveDrive::lockPose);
   }
 
-  public double distanceFromHubMeters()
+  public Distance distanceFromHubMeters()
   {
-    return getPose().getTranslation().getDistance(AllianceFlipUtil.apply(Hub.topCenterPoint.toTranslation2d()));
+    return Meters.of(getPose().getTranslation()
+                              .getDistance(AllianceFlipUtil.apply(Hub.topCenterPoint.toTranslation2d())));
   }
 
   public void driveFieldOrientedSetpoint(ChassisSpeeds speeds)

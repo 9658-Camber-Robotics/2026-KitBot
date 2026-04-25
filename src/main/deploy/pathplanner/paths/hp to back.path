@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.467280858676207,
-        "y": 4.010661896243291
+        "x": 0.46332142857144165,
+        "y": 0.6985357142934845
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.5262075134168156,
-        "y": 3.9782110912343462
+        "x": 1.078785714285714,
+        "y": 1.1196428571428567
       },
       "isLocked": false,
-      "linkedName": "Hub"
+      "linkedName": "A3"
     },
     {
       "anchor": {
-        "x": 0.4655813953488368,
-        "y": 0.6520035778175304
+        "x": 2.8875178316690437,
+        "y": 3.9457602862254024
       },
       "prevControl": {
-        "x": -0.5344186046511632,
-        "y": 0.6520035778175305
+        "x": 2.4502142602404726,
+        "y": 3.0470178571428574
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Depot"
+      "linkedName": "A1"
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 1.2698625933615155
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Camber Middle Auto",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

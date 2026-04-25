@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.690161001788908,
-        "y": 2.355670840787119
+        "x": 7.791269614835947,
+        "y": 3.6015549215406564
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.8891413237924866,
-        "y": 2.4043470483005365
+        "x": 7.830085592011411,
+        "y": 2.42413694721826
       },
       "isLocked": false,
-      "linkedName": "RightBumpNZ"
+      "linkedName": "C4"
     },
     {
       "anchor": {
-        "x": 3.5484078711985685,
-        "y": 2.355670840787119
+        "x": 6.80793152639087,
+        "y": 0.6774179743223976
       },
       "prevControl": {
-        "x": 5.6739355992844365,
-        "y": 2.306994633273703
+        "x": 8.114736091298145,
+        "y": 0.7809272467902997
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "RightBump"
+      "linkedName": "C3"
     }
   ],
   "rotationTargets": [],
@@ -33,10 +33,15 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "StopIntake",
+      "name": "StartIntake",
       "waypointRelativePos": 0,
-      "endWaypointRelativePos": null,
-      "command": null
+      "endWaypointRelativePos": 0.3053341508277088,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "StartIntake"
+        }
+      }
     }
   ],
   "globalConstraints": {
@@ -49,13 +54,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": -91.43209618416475
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Camber Right auto",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": -88.28164199834454
   },
   "useDefaultConstraints": true
 }
