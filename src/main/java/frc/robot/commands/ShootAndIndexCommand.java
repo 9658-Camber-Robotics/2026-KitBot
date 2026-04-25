@@ -64,7 +64,7 @@ public class ShootAndIndexCommand extends Command {
         this.indexerSubsystem = indexerSubsystem;
         this.shooterSubsystem = shooterSubsystem;
         this.goal = () -> {
-          return RPM.of(shotMap.get((swerveSubsystem.distanceFromHubMeters().minus(Feet.of(2)).in(Meters))));
+          return RPM.of(shotMap.get((swerveSubsystem.distanceFromHubMeters().minus(Feet.of(1)).in(Meters))));
         };
         // each subsystem used by the command must be passed into the
         // addRequirements() method (which takes a vararg of Subsystem)
