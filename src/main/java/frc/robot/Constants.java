@@ -155,7 +155,7 @@ public final class Constants
       public static final AngularVelocity lowRPM    = RPM.of(1100); // 3100
       public static final AngularVelocity midRPM    = RPM.of(1500); // 3500
       public static final AngularVelocity high      = RPM.of(1600); // 3600
-      public static final AngularVelocity maxRPM    = RPM.of(1600); // 3600
+      public static final AngularVelocity maxRPM    = RPM.of(3600); // 3600
       public static final AngularVelocity autonomousPeriodRPM = RPM.of(3350);
 
     }
