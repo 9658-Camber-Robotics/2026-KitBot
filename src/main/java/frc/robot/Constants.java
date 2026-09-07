@@ -109,14 +109,14 @@ public final class Constants
         .withGearing(new MechanismGearing(GearBox.fromTeeth(20,10,28)))
         .withClosedLoopController(0, 0, 0)
         .withFeedforward(new ArmFeedforward(0, 0, 0))
-        .withFollowers(Pair.of(new TalonFX(CANIDS.shooterCANIDtwo),false));
+        .withFollowers(Pair.of(new TalonFX(CANIDS.shooterCANIDtwo),false))
+        .withStartingPosition(Degrees.of(-180))
+        .withMomentOfInertia(Inches.of(30), Pounds.of(8));
 
     public static final ArmConfig config = new ArmConfig()
         .withTelemetry("Climber", verbosity)
-        .withHardLimit(Degrees.of(-180), Degrees.of(180))
-        .withStartingPosition(Degrees.of(-180))
-        .withLength(Inches.of(30))
-        .withMass(Pounds.of(8));
+        .withHardLimits(Degrees.of(-180), Degrees.of(180))
+        .withLength(Inches.of(30));
   }
 
   public static class Indexer
@@ -130,12 +130,12 @@ public final class Constants
         .withStatorCurrentLimit(Amps.of(40))
         .withGearing(new MechanismGearing(GearBox.fromTeeth(12,80,36)))
         .withClosedLoopController(0, 0, 0)
-        .withFeedforward(new SimpleMotorFeedforward(0, 10, 0));
+        .withFeedforward(new SimpleMotorFeedforward(0, 10, 0))
+        .withMomentOfInertia(Inches.of(2), Pounds.of(1));
 
     public static final DCMotor        motor  = DCMotor.getNEO(1);
     public static final FlyWheelConfig config = new FlyWheelConfig()
         .withTelemetry("Indexer", verbosity)
-        .withMass(Pounds.of(1))
         .withDiameter(Inches.of(2));
 
     public static class Setpoints
@@ -172,11 +172,11 @@ public final class Constants
         .withStatorCurrentLimit(Amps.of(40))
         .withGearing(new MechanismGearing(GearBox.fromTeeth(40,60,60)))
         .withClosedLoopController(0.001, 0, 0)
-        .withFeedforward(new SimpleMotorFeedforward(0.000, 0.170, 0.1));
+        .withFeedforward(new SimpleMotorFeedforward(0.000, 0.170, 0.1))
+        .withMomentOfInertia(Inches.of(4), Pounds.of(2));
     public static final FlyWheelConfig             config                    = new FlyWheelConfig()
         .withTelemetry("Shooter", verbosity)
-        .withDiameter(Inches.of(4))
-        .withMass(Pounds.of(2));
+        .withDiameter(Inches.of(4));
   }
 // stuff so this will push
 

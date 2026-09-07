@@ -74,7 +74,6 @@ public class ShootAndIndexCommand extends Command {
     @Override
     public void initialize() {
         indexerSubsystem.setDutycycle(0);
-//    shooterSubsystem.setVelocity(goal.get());
     }
 
     @Override
@@ -83,7 +82,6 @@ public class ShootAndIndexCommand extends Command {
         SmartDashboard.putNumber("Shooter/Goal", goal.get().in(RPM));
         SmartDashboard.putNumber("Shooter/RPM", shooterSubsystem.getVelocity().in(RPM));
         if ((shooterSubsystem.getVelocity().isNear(goal.get(), RPM.of(50)))) {
-//      indexerSubsystem.setVelocity(Indexer.Setpoints.indexSpeed);
             indexerSubsystem.setDutycycle(-.60);
 
 
