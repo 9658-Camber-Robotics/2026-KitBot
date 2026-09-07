@@ -25,7 +25,7 @@ public class ShooterSubsystem extends SubsystemBase
   public ShooterSubsystem()
   {
     shooterMotorController = new TalonFXWrapper(motorController, Shooter.motor, Shooter.smc.withSubsystem(this));
-    flyWheel = new FlyWheel(Shooter.config.withSmartMotorController(shooterMotorController));
+    flyWheel = new FlyWheel(Shooter.config, shooterMotorController);
   }
 
   public void setDutycycle(double dutycycle)

@@ -21,7 +21,7 @@ public class IndexerSubsystem extends SubsystemBase
                                                              Indexer.motor,
                                                              Indexer.smc.clone().withSubsystem(this));
 
-  private FlyWheel indexer = new FlyWheel(Indexer.config.clone().withSmartMotorController(indexerSMC));
+  private FlyWheel indexer = new FlyWheel(Indexer.config.clone(), indexerSMC);
 
     public void setDutycycle(double dutyCycle)
     {
