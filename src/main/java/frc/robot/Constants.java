@@ -56,7 +56,7 @@ public final class Constants
   {
 
     public static final int shooterCANID = 4;
-    public static final int shooterCANIDtwo = 41;
+    public static final int shooterCANIDtwo = 41; //whose idea was this :(
     public static final int indexerCANID = 3;
     public static final int climbCANID   = 9;
     public static final int climbCANID2  = 0; // Ruh roh
