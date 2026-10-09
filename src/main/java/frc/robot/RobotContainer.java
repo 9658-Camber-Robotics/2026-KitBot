@@ -31,7 +31,6 @@ public class RobotContainer
 {
 
   private final ShooterSubsystem shooter   = new ShooterSubsystem();
-  //private final ClimbSubsystem   climb     = new ClimbSubsystem();
   private final IndexerSubsystem indexer   = new IndexerSubsystem();
   private final SwerveSubsystem  drivebase = new SwerveSubsystem();
   private final CommandXboxController driverController   = new CommandXboxController(0);
@@ -62,7 +61,7 @@ public class RobotContainer
     // Test control is this.
     // drivebase.setDefaultCommand(drivebase.driveFieldOriented(driveDirectAngle)); // Use this to test for the 8 steps.
 
-    shooter.setDefaultCommand(shooter.setVelocityCommand(() -> Setpoints.maxRPM.times(MathUtil.clamp(MathUtil.applyDeadband(
+    shooter.setDefaultCommand(shooter.setVelocityCommand(() -> Setpoints.speedRPM.times(MathUtil.clamp(MathUtil.applyDeadband(
                                                                                                          -operatorController.getRightY(),
                                                                                                          0.1),
                                                                                                      0,
@@ -108,8 +107,8 @@ public class RobotContainer
     // Shooting commands
     operatorController.a().whileTrue(new ShootAndIndexCommand(indexer, shooter, Setpoints.lowRPM));
     operatorController.b().whileTrue(new ShootAndIndexCommand(indexer, shooter, Setpoints.midRPM));
-    operatorController.x().whileTrue(new ShootAndIndexCommand(indexer, shooter, Setpoints.high));
-    operatorController.y().whileTrue(new ShootAndIndexCommand(indexer, shooter, Setpoints.maxRPM));
+    operatorController.x().whileTrue(new ShootAndIndexCommand(indexer, shooter, Setpoints.speedRPM));
+    operatorController.y().whileTrue(new ShootAndIndexCommand(indexer, shooter, Setpoints.ridiculousRPM));
     operatorController.rightTrigger(0.3).whileTrue(new ShootAndIndexCommand(indexer, shooter, drivebase));
     operatorController.povUp().whileTrue(indexer.setDutycycleCommand(-0.8));
     operatorController.povDown().whileTrue(indexer.setDutycycleCommand(0.8));

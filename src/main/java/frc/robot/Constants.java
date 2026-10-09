@@ -49,7 +49,7 @@ import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
  * <p>It is advised to statically import this class (or one of its inner classes) wherever the
  * constants are needed, to reduce verbosity.
  */
-public final class Constants
+public final class  Constants
 {
 
   public static class CANIDS
@@ -152,11 +152,16 @@ public final class Constants
     {
 
       public static final AngularVelocity tolerance = RPM.of(60); //60
-      public static final AngularVelocity lowRPM    = RPM.of(1100); // 3100
-      public static final AngularVelocity midRPM    = RPM.of(1500); // 3500
-      public static final AngularVelocity high      = RPM.of(1600); // 3600
-      public static final AngularVelocity maxRPM    = RPM.of(3600); // 3600
-      public static final AngularVelocity autonomousPeriodRPM = RPM.of(3350);
+      public static final AngularVelocity lowRPM    = RPM.of(1000); // 3100
+      public static final AngularVelocity midRPM    = RPM.of(1100); // 3500
+      // public static final AngularVelocity high      = RPM.of(1200); // 3600
+      // public static final AngularVelocity maxRPM    = RPM.of(1360);// 3600
+
+      public static final AngularVelocity speedRPM = RPM.of(6000);
+      public static final AngularVelocity ridiculousRPM = RPM.of(6500);
+
+
+     public static final AngularVelocity autonomousPeriodRPM = RPM.of(3350);
 
     }
 
