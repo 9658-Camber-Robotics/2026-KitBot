@@ -67,7 +67,7 @@ public final class  Constants
 
     public static final Distance robotWidth  = Inches.of(24);
     public static final Distance robotLength = Inches.of(32);
-    public static final double maxSpeed = 9.2 * .5; // This still seems somewhat fast.
+    public static final double maxSpeed = 9.2 * 0.5; // This still seems somewhat fast.
     public static final Pose2d   startPose   = new Pose2d(new Translation2d(Meter.of(3.5),
                                                                             Meter.of(4)),
 
@@ -157,8 +157,8 @@ public final class  Constants
       // public static final AngularVelocity high      = RPM.of(1200); // 3600
       // public static final AngularVelocity maxRPM    = RPM.of(1360);// 3600
 
-      public static final AngularVelocity speedRPM = RPM.of(6000);
-      public static final AngularVelocity ridiculousRPM = RPM.of(6500);
+      public static final AngularVelocity speedRPM = RPM.of(1600);
+      public static final AngularVelocity ridiculousRPM = RPM.of(3500);
 
 
      public static final AngularVelocity autonomousPeriodRPM = RPM.of(3350);
