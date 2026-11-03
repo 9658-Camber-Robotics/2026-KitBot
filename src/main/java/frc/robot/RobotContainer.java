@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.Shooter;
 import frc.robot.Constants.Shooter.Setpoints;
 import frc.robot.Constants.SwerveDrive;
-import frc.robot.commands.AutoAimCommand;
+//import frc.robot.commands.AutoAimCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.OuttakeCommand;
 import frc.robot.commands.ShootAndIndexCommand;
@@ -40,24 +40,24 @@ public class RobotContainer
                                                                 () -> driverController.getLeftY() * -1,
                                                                 () -> driverController.getLeftX() * -1) // set to 0
                                                             .withControllerRotationAxis(() -> driverController.getRightX())
-                                                            .deadband(.1)
-                                                            .scaleTranslation(.8)
-                                                            .allianceRelativeControl(true);
+                                                            .scaleTranslation(0.05)
+          .scaleRotation(0.2)
+                                                            .allianceRelativeControl(false);
 
   /// Testing SwerveInputStream to ensure that our swerve drive is capable of running in autonomous
-  SwerveInputStream driveDirectAngle = SwerveInputStream.of(drivebase.getSwerveDrive(),
-                                                            () -> driverController.getLeftY() * -1,
-                                                            () -> driverController.getLeftX() * -1)
-                                                        .withControllerHeadingAxis(driverController::getRightX,
-                                                                                   driverController::getRightY)
-                                                        .deadband(0.1)
-                                                        .scaleTranslation(.8).headingWhile(true)
-                                                        .allianceRelativeControl(true);
+//  SwerveInputStream driveDirectAngle = SwerveInputStream.of(drivebase.getSwerveDrive(),
+//                                                            () -> driverController.getLeftY() * -1,
+//                                                            () -> driverController.getLeftX() * -1)
+//                                                        .withControllerHeadingAxis(driverController::getRightX,
+//                                                                                   driverController::getRightY)
+//                                                        .deadband(0.1)
+//                                                        .scaleTranslation(.1).headingWhile(true)
+//                                                        .allianceRelativeControl(true);
 
   public RobotContainer()
   {
     // Regular control is commented out below.
-    drivebase.setDefaultCommand(drivebase.driveFieldOriented(driveDirectAngle));
+    drivebase.setDefaultCommand(drivebase.driveFieldOriented(driveAngularVelocity));
     // Test control is this.
     // drivebase.setDefaultCommand(drivebase.driveFieldOriented(driveDirectAngle)); // Use this to test for the 8 steps.
 
@@ -107,6 +107,8 @@ public class RobotContainer
     // Shooting commands
     operatorController.a().whileTrue(new ShootAndIndexCommand(indexer, shooter, Setpoints.lowRPM));
     operatorController.b().whileTrue(new ShootAndIndexCommand(indexer, shooter, Setpoints.midRPM));
+
+    // DO NOT USE X AND Y
     operatorController.x().whileTrue(new ShootAndIndexCommand(indexer, shooter, Setpoints.speedRPM));
     operatorController.y().whileTrue(new ShootAndIndexCommand(indexer, shooter, Setpoints.ridiculousRPM));
     operatorController.rightTrigger(0.3).whileTrue(new ShootAndIndexCommand(indexer, shooter, drivebase));
@@ -116,7 +118,7 @@ public class RobotContainer
     operatorController.povRight().whileTrue(shooter.setDutycycleCommand(0.8));
 
     // auto-aim
-    driverController.leftTrigger(0.3).whileTrue(new AutoAimCommand(drivebase, driveAngularVelocity, 0.4));
+    // driverController.leftTrigger(0.3).whileTrue(new AutoAimCommand(drivebase, driveAngularVelocity, 0.4));
 
     // Intake and outtake controls.
     // TODO: Tune later

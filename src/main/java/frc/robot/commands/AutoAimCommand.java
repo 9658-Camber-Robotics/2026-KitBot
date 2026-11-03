@@ -1,3 +1,4 @@
+/*
 package frc.robot.commands;
 
 import static edu.wpi.first.units.Units.Seconds;
@@ -63,3 +64,5 @@ public class AutoAimCommand extends Command
     swerveSubsystem.getField().getObject("AimTarget").setPoses(List.of());
   }
 }
+
+ */

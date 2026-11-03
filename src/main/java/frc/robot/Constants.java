@@ -67,7 +67,7 @@ public final class  Constants
 
     public static final Distance robotWidth  = Inches.of(24);
     public static final Distance robotLength = Inches.of(32);
-    public static final double maxSpeed = 9.2 * 0.5; // This still seems somewhat fast.
+    public static final double maxSpeed = 9.2; // This still seems somewhat fast.
     public static final Pose2d   startPose   = new Pose2d(new Translation2d(Meter.of(3.5),
                                                                             Meter.of(4)),
 
